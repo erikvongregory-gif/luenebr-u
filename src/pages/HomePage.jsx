@@ -31,53 +31,99 @@ function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
   const heroFrameRef = useRef(0)
 
   useEffect(() => {
-    const isMobile = window.matchMedia('(max-width: 768px)').matches
+    let cleanup = () => {}
+    let cancelled = false
 
-    if (isMobile) {
-      const duration = 6000
-      const interval = duration / HERO_FRAME_COUNT
-      const id = setInterval(() => {
-        setHeroFrame((f) => (f + 1) % HERO_FRAME_COUNT)
-      }, interval)
-      return () => clearInterval(id)
-    }
+    const run = () => {
+      if (cancelled) return
 
-    const hero = heroRef.current
-    if (!hero) return
+      // Touch-Geräte (Handy/Tablet) bekommen Autoplay – zuverlässiger als Viewport
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      const isNarrow =
+        window.matchMedia('(max-width: 1024px)').matches ||
+        window.innerWidth <= 1024 ||
+        (typeof screen !== 'undefined' && screen.width <= 1024)
+      const isMobile = isTouch || isNarrow
 
-    let rafId = null
+      if (isMobile) {
+        // 4 Sekunden, 91 Frames ≈ 23 fps – schnell und flüssig wie Original-Video
+        const duration = 4000
+        const frameDuration = duration / HERO_FRAME_COUNT
+        let rafId = null
+        let startTime = null
 
-    const updateFrame = () => {
-      const rect = hero.getBoundingClientRect()
-      const scrollRange = hero.offsetHeight - window.innerHeight
-      if (scrollRange <= 0) {
-        rafId = null
+        const animate = (timestamp) => {
+          if (cancelled) return
+          if (startTime === null) startTime = timestamp
+          const elapsed = timestamp - startTime
+          const rawFrame = elapsed / frameDuration
+          const frame = Math.min(
+            HERO_FRAME_COUNT - 1,
+            Math.floor(rawFrame)
+          )
+          if (frame !== heroFrameRef.current) {
+            heroFrameRef.current = frame
+            setHeroFrame(frame)
+          }
+          if (rawFrame < HERO_FRAME_COUNT) {
+            rafId = requestAnimationFrame(animate)
+          }
+        }
+
+        rafId = requestAnimationFrame(animate)
+        cleanup = () => {
+          if (rafId) cancelAnimationFrame(rafId)
+        }
         return
       }
-      const scrolledPast = Math.max(0, -rect.top)
-      const progress = Math.min(1, scrolledPast / scrollRange)
-      const frame = Math.min(
-        HERO_FRAME_COUNT - 1,
-        Math.floor(progress * HERO_FRAME_COUNT)
-      )
-      if (frame !== heroFrameRef.current) {
-        heroFrameRef.current = frame
-        setHeroFrame(frame)
+
+      const hero = heroRef.current
+      if (!hero) return
+
+      let rafId = null
+
+      const updateFrame = () => {
+        if (cancelled) return
+        const rect = hero.getBoundingClientRect()
+        const scrollRange = hero.offsetHeight - window.innerHeight
+        if (scrollRange <= 0) {
+          rafId = null
+          return
+        }
+        const scrolledPast = Math.max(0, -rect.top)
+        const progress = Math.min(1, scrolledPast / scrollRange)
+        const frame = Math.min(
+          HERO_FRAME_COUNT - 1,
+          Math.floor(progress * HERO_FRAME_COUNT)
+        )
+        if (frame !== heroFrameRef.current) {
+          heroFrameRef.current = frame
+          setHeroFrame(frame)
+        }
+        rafId = null
       }
-      rafId = null
+
+      const onScroll = () => {
+        if (rafId) return
+        rafId = requestAnimationFrame(updateFrame)
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true })
+      updateFrame()
+
+      cleanup = () => {
+        if (rafId) cancelAnimationFrame(rafId)
+        window.removeEventListener('scroll', onScroll)
+      }
     }
 
-    const onScroll = () => {
-      if (rafId) return
-      rafId = requestAnimationFrame(updateFrame)
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true })
-    updateFrame()
+    // Verzögerung: Viewport-Dimensionen sind auf Mobile oft erst nach kurzer Zeit korrekt
+    const timeoutId = setTimeout(run, 100)
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId)
-      window.removeEventListener('scroll', onScroll)
+      cancelled = true
+      clearTimeout(timeoutId)
+      cleanup()
     }
   }, [])
 
