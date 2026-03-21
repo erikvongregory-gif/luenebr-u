@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&amp;display=swap');
+      .logo-text { font-family: 'Caveat Brush', cursive; }
+      .logo-fish {
+        animation: fishSwim 2.5s ease-in-out infinite;
+        transform-origin: 100px 120px;
+      }
+      @keyframes fishSwim {
+        0%, 100% { transform: translateX(0) translateY(0) rotate(-2deg); }
+        25% { transform: translateX(8px) translateY(-3px) rotate(1deg); }
+        50% { transform: translateX(0) translateY(2px) rotate(0deg); }
+        75% { transform: translateX(-8px) translateY(-1px) rotate(-1deg); }
+      }
+    </style>
+  </defs>
+  <!-- Fisch (Stint)  nur dieser Teil wird animiert -->
+  <g class="logo-fish" fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round">
+    <!-- Krper -->
+    <path d="M165 115 Q145 112 120 113 Q90 115 60 118 Q35 120 18 118 L5 115" />
+    <path d="M165 125 Q145 128 120 127 Q90 125 60 122 Q35 120 18 122 L5 125" />
+    <!-- Kopf & Schnauze -->
+    <path d="M168 118 L178 120 L182 118 L180 115 L175 113 L168 115 Z" />
+    <!-- Auge -->
+    <circle cx="162" cy="120" r="2.5" fill="currentColor" stroke="none" />
+    <!-- Rckenflosse -->
+    <path d="M155 112 L157 108 L159 112" />
+    <path d="M120 111 L122 107 L124 111" />
+    <path d="M85 112 L87 108 L89 112" />
+    <path d="M50 114 L52 110 L54 114" />
+    <!-- Bauchflosse -->
+    <path d="M120 130 L122 134 L124 130" />
+    <path d="M85 131 L87 135 L89 131" />
+    <!-- Schwanzflosse -->
+    <path d="M5 115 L-8 108 L-10 120 L-8 132 L5 125" />
+    <!-- Schuppen-Linien -->
+    <path d="M150 117 L148 120 L150 123" stroke-width="0.4" />
+    <path d="M115 118 L113 121 L115 124" stroke-width="0.4" />
+    <path d="M80 119 L78 122 L80 125" stroke-width="0.4" />
+    <path d="M45 121 L43 124 L45 127" stroke-width="0.4" />
+  </g>
+  <!-- Text  statisch, keine Animation -->
+  <text x="100" y="185" class="logo-text" text-anchor="middle" font-size="28" font-weight="bold" fill="currentColor">L&#220;NE BR&#196;U</text>
+  <text x="100" y="210" class="logo-text" text-anchor="middle" font-size="12" fill="currentColor">HANDCRAFTED SINCE 2017</text>
+</svg>
