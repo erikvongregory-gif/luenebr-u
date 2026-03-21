@@ -1,6 +1,9 @@
 :root {
   --color-amber: #d4a853;
   --color-amber-dark: #b8860b;
+  --color-fish: #7eb8da;
+  --color-fish-dark: #5a9bc4;
+  --color-fish-scale: #a8d4ed;
   --color-cream: #f8f5ef;
   --color-cream-dark: #e8e0d4;
   --color-navy: #0f1419;
@@ -254,11 +257,13 @@ a {
 .nav--scrolled .btn-primary {
   background: var(--color-bark);
   color: var(--color-cream);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .nav--scrolled .btn-primary:hover {
   background: var(--color-navy);
   color: var(--color-cream);
+  filter: none;
 }
 
 .nav-cart-badge {
@@ -361,21 +366,20 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.9rem 2rem;
+  padding: 0.6rem 1.5rem;
   background: var(--color-cream);
   color: var(--color-bark);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.95rem;
-  border: none;
+  border: 2px solid transparent;
   border-radius: var(--radius);
   cursor: pointer;
-  transition: background var(--transition), transform var(--transition);
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 
 .btn-primary:hover {
   background: var(--color-cream-dark);
-  transform: translateY(-1px);
 }
 
 .btn-primary:focus-visible {
@@ -393,11 +397,10 @@ a {
 .hero .btn-primary:hover,
 .tap-card .btn-primary:hover {
   background: var(--color-cream-dark);
-  color: var(--color-bark);
 }
 
 .btn--small {
-  padding: 0.55rem 1.25rem;
+  padding: 0.45rem 1rem;
   font-size: 0.9rem;
 }
 
@@ -441,6 +444,7 @@ a {
   background: #0a0c0f;
   isolation: isolate;
   flex-shrink: 0;
+  contain: layout paint;
 }
 
 .hero--video .hero-video-wrap--fallback {
@@ -467,6 +471,14 @@ a {
   visibility: visible !important;
   border-radius: 1px;
   transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@media (max-width: 1024px) {
+  .hero--video .hero-video-wrap {
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .hero--video .hero-video-overlay {
@@ -475,7 +487,8 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(180deg, rgba(10, 12, 15, 0.4) 0%, rgba(10, 12, 15, 0.5) 100%);
+  background:
+    linear-gradient(180deg, rgba(10, 12, 15, 0.4) 0%, rgba(10, 12, 15, 0.45) 60%, rgba(10, 12, 15, 0.85) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -633,28 +646,39 @@ a {
   cursor: pointer;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: background 0.2s, opacity 0.2s;
   animation: heroFadeIn 1s ease-out 1.2s both;
+}
+
+.hero-scroll:hover {
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 1;
 }
 
 .hero-scroll-text {
   font-family: var(--font-display);
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--color-cream-dark);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  color: var(--color-cream);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .hero-scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--color-cream-dark), transparent);
+  width: 2px;
+  height: 52px;
+  background: linear-gradient(to bottom, var(--color-cream), rgba(255, 255, 255, 0.3));
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
   animation: heroScrollBounce 2s ease-in-out infinite;
 }
 
 @keyframes heroScrollBounce {
-  0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
+  0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
   50% { transform: scaleY(1); opacity: 1; }
 }
 
@@ -679,11 +703,30 @@ a {
 }
 
 .section--biere {
+  position: relative;
   background: #2a2520;
   background-image: linear-gradient(180deg, rgba(15, 20, 25, 0.7) 0%, rgba(45, 35, 24, 0.65) 100%), url('/hero-barrels.svg');
   background-size: cover;
   background-position: center;
   color: var(--color-cream);
+}
+
+/* Sanfter Übergang von Hero (Section 1) zu Biere (Section 2) */
+.section--biere::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(60px, 12vh, 140px);
+  background: linear-gradient(
+    to bottom,
+    #0a0c0f 0%,
+    rgba(42, 37, 32, 0.5) 40%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
 }
 
 .section--biere .section-label {
@@ -1010,7 +1053,11 @@ a {
   margin: 1.25rem 0 1rem;
 }
 
-.beer-specs span {
+.beer-spec-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -1018,6 +1065,50 @@ a {
   background: var(--color-cream-dark);
   color: var(--color-bark);
   border-radius: var(--radius-sm);
+  animation: beerSpecsBoxGold 3s ease-in-out forwards;
+  animation-play-state: paused;
+}
+
+.beer-spec-item--visible {
+  animation-play-state: running;
+}
+
+.beer-spec-item--visible .beer-spec-border,
+.beer-spec-item--visible .beer-spec-rect {
+  animation-play-state: running;
+}
+
+.beer-spec-border {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  color: var(--color-amber);
+  pointer-events: none;
+  animation: beerSpecsBorderFade 3s forwards;
+  animation-play-state: paused;
+}
+
+.beer-spec-rect {
+  stroke-dasharray: 25 400;
+  stroke-dashoffset: 0;
+  animation: beerSpecsBorderFlow 3s linear forwards;
+  animation-play-state: paused;
+}
+
+@keyframes beerSpecsBorderFlow {
+  to { stroke-dashoffset: -425; }
+}
+
+@keyframes beerSpecsBorderFade {
+  0%, 90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes beerSpecsBoxGold {
+  0%, 85% { background: var(--color-cream-dark); color: var(--color-bark); }
+  90% { background: rgba(212, 168, 83, 0.35); color: var(--color-bark); }
+  100% { background: var(--color-amber); color: var(--color-bark); }
 }
 
 .beer-card .btn-primary {
@@ -1038,28 +1129,36 @@ a {
   color: var(--color-cream-dark);
 }
 
-.beer-card--hanseat .beer-specs span {
-  background: rgba(255, 255, 255, 0.15);
-  color: var(--color-cream);
+.beer-card--hanseat .beer-spec-item {
+  animation-name: beerSpecsBoxGoldHanseat;
 }
 
-.beer-card--hanseat .btn-primary {
-  background: var(--color-cream);
-  color: var(--color-bark);
-}
-
-.beer-card--hanseat .btn-primary:hover {
-  background: var(--color-cream-dark);
-  color: var(--color-bark);
+.beer-card--hanseat .beer-spec-border {
+  color: var(--color-amber);
 }
 
 /* Luna overrides */
 .beer-card--luna .beer-title { color: inherit; }
 .beer-card--luna .beer-lead { color: var(--color-cream-dark); }
 .beer-card--luna .beer-desc { color: var(--color-cream-dark); }
-.beer-card--luna .beer-specs span {
-  background: rgba(255, 255, 255, 0.15);
-  color: var(--color-cream);
+.beer-card--luna .beer-spec-item {
+  animation-name: beerSpecsBoxGoldLuna;
+}
+
+.beer-card--luna .beer-spec-border {
+  color: var(--color-amber);
+}
+
+@keyframes beerSpecsBoxGoldHanseat {
+  0%, 85% { background: rgba(255, 255, 255, 0.15); color: var(--color-cream); }
+  90% { background: rgba(212, 168, 83, 0.5); color: var(--color-bark); }
+  100% { background: var(--color-amber); color: var(--color-bark); }
+}
+
+@keyframes beerSpecsBoxGoldLuna {
+  0%, 85% { background: rgba(255, 255, 255, 0.15); color: var(--color-cream-dark); }
+  90% { background: rgba(212, 168, 83, 0.5); color: var(--color-bark); }
+  100% { background: var(--color-amber); color: var(--color-bark); }
 }
 
 /* Tap Card */
@@ -1249,13 +1348,32 @@ a {
   text-align: center;
 }
 
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-amber);
+  margin-bottom: 0.25rem;
+}
+
+.stat-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
 .stat-value {
   display: block;
   font-family: var(--font-display);
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--color-cream);
-  margin-bottom: 0.25rem;
 }
 
 .stat-label {

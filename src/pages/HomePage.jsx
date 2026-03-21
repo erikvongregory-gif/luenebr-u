@@ -11,24 +11,146 @@ const PHONE = '+49 176 25686466'
 const EMAIL = 'info@luenebraeu.de'
 
 const HERO_FRAME_COUNT = 91
+const HERO_FRAME_STEP_MOBILE = 2
+
+const STATS = [
+  { value: 27711, label: 'Liter gebraut', format: (n) => n.toLocaleString('de-DE'), icon: 'beer' },
+  { value: 3391, label: 'Kisten gepackt', format: (n) => n.toLocaleString('de-DE'), icon: 'crate' },
+  { value: 79959, label: '0,33l Flaschen', format: (n) => n.toLocaleString('de-DE'), icon: 'bottle' },
+  { value: 4485, label: 'Liter Fassbier', format: (n) => n.toLocaleString('de-DE'), icon: 'keg' },
+]
+
+function useCountUp(end, duration, start) {
+  const [value, setValue] = useState(0)
+  useEffect(() => {
+    if (!start) return
+    let startTime = null
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp
+      const elapsed = timestamp - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const easeOut = 1 - Math.pow(1 - progress, 2)
+      setValue(Math.floor(easeOut * end))
+      if (progress < 1) requestAnimationFrame(animate)
+    }
+    requestAnimationFrame(animate)
+  }, [end, duration, start])
+  return value
+}
+
+function StatIcon({ name }) {
+  const icons = {
+    beer: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M8 20h8M9 20V14h6v6M7 4h10l1 10H6L7 4z" /><path d="M12 4V2" /></svg>,
+    crate: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 12h16M12 4v16" /></svg>,
+    bottle: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 2h6v3l-2 14H11L9 5V2z" /><path d="M9 5h6" /></svg>,
+    keg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 7h14v14H5z" /><path d="M5 10h14M5 14h14M9 7V5a2 2 0 016 0v2" /></svg>,
+  }
+  return <span className="stat-icon" aria-hidden>{icons[name] || null}</span>
+}
+
+function StatItem({ stat, isVisible }) {
+  const value = useCountUp(stat.value, 2000, isVisible)
+  return (
+    <div className="stat">
+      <StatIcon name={stat.icon} />
+      <span className="stat-value">{stat.format(value)}</span>
+      <span className="stat-label">{stat.label}</span>
+    </div>
+  )
+}
+
+function StatsSection() {
+  const ref = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true)
+      },
+      { threshold: 0.3 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <section ref={ref} className="section section--stats">
+      <div className="container">
+        <span className="section-label section-label--light">07</span>
+        <blockquote className="stats-quote">„Handwerklich gebraut mit Hingabe für die Region"</blockquote>
+        <div className="stats-grid">
+          {STATS.map((stat) => (
+            <StatItem key={stat.label} stat={stat} isVisible={isVisible} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function BeerSpecItem({ children }) {
+  const ref = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true)
+      },
+      { threshold: 0.5, rootMargin: '0px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <span ref={ref} className={`beer-spec-item ${isVisible ? 'beer-spec-item--visible' : ''}`}>
+      <svg className="beer-spec-border" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect className="beer-spec-rect" x="2" y="2" width="96" height="96" rx="12" fill="none" stroke="currentColor" strokeWidth="2" />
+      </svg>
+      {children}
+    </span>
+  )
+}
 
 function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
   const [hanseatSlide, setHanseatSlide] = useState(0)
   const [heroFrame, setHeroFrame] = useState(0)
   const heroRef = useRef(null)
+  const heroFrameRef = useRef(0)
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
+  const isMobile = () =>
+    'ontouchstart' in window || navigator.maxTouchPoints > 0 ||
+    window.matchMedia('(max-width: 1024px)').matches ||
+    (typeof screen !== 'undefined' && screen.width <= 1024)
+
   useEffect(() => {
+    if (isMobile()) {
+      const preloadBatch = (start, end) => {
+        for (let i = start; i <= end && i <= HERO_FRAME_COUNT; i += HERO_FRAME_STEP_MOBILE) {
+          const img = new Image()
+          img.src = `/hero-frames/frame-${String(i).padStart(4, '0')}.jpg`
+        }
+      }
+      preloadBatch(1, 30)
+      const t2 = setTimeout(() => preloadBatch(31, 60), 800)
+      const t3 = setTimeout(() => preloadBatch(61, HERO_FRAME_COUNT), 1600)
+      return () => { clearTimeout(t2); clearTimeout(t3) }
+    }
     for (let i = 1; i <= HERO_FRAME_COUNT; i++) {
       const img = new Image()
       img.src = `/hero-frames/frame-${String(i).padStart(4, '0')}.jpg`
     }
   }, [])
-
-  const heroFrameRef = useRef(0)
 
   useEffect(() => {
     let cleanup = () => {}
@@ -46,9 +168,10 @@ function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
       const isMobile = isTouch || isNarrow
 
       if (isMobile) {
-        // 4 Sekunden, 91 Frames ≈ 23 fps – schnell und flüssig wie Original-Video
+        const imgEl = heroRef.current?.querySelector('.hero-video--frames')
         const duration = 4000
-        const frameDuration = duration / HERO_FRAME_COUNT
+        const mobileFrameCount = Math.ceil(HERO_FRAME_COUNT / HERO_FRAME_STEP_MOBILE)
+        const frameDuration = duration / mobileFrameCount
         let rafId = null
         let startTime = null
 
@@ -56,16 +179,17 @@ function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
           if (cancelled) return
           if (startTime === null) startTime = timestamp
           const elapsed = timestamp - startTime
-          const rawFrame = elapsed / frameDuration
-          const frame = Math.min(
-            HERO_FRAME_COUNT - 1,
-            Math.floor(rawFrame)
-          )
+          const step = Math.floor(elapsed / frameDuration)
+          const frame = Math.min(mobileFrameCount - 1, step) * HERO_FRAME_STEP_MOBILE
           if (frame !== heroFrameRef.current) {
             heroFrameRef.current = frame
-            setHeroFrame(frame)
+            if (imgEl) {
+              imgEl.src = `/hero-frames/frame-${String(frame + 1).padStart(4, '0')}.jpg`
+            } else {
+              setHeroFrame(frame)
+            }
           }
-          if (rawFrame < HERO_FRAME_COUNT) {
+          if (step < mobileFrameCount) {
             rafId = requestAnimationFrame(animate)
           }
         }
@@ -203,9 +327,9 @@ function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
                 Süffig, leicht und zart gebittert – mit neuem Schliff – zieht diese moderne Version heute wieder in die Hansestadt ein.
               </p>
               <div className="beer-specs">
-                <span>EBC 7</span>
-                <span>IBU 18</span>
-                <span>5,6% vol.</span>
+                <BeerSpecItem>EBC 7</BeerSpecItem>
+                <BeerSpecItem>IBU 18</BeerSpecItem>
+                <BeerSpecItem>5,6% vol.</BeerSpecItem>
               </div>
               <p className="beer-availability">
                 Erhältlich in vielen Lüneburger Läden und ausgewählten Restaurants vom Fass.
@@ -228,9 +352,9 @@ function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
               </p>
               <p className="beer-limit">Jedes Jahr aus einem anderen Holzfass · <strong>Auf 550 Flaschen limitiert!</strong></p>
               <div className="beer-specs">
-                <span>EBC 55</span>
-                <span>IBU 20</span>
-                <span>7,1% vol.</span>
+                <BeerSpecItem>EBC 55</BeerSpecItem>
+                <BeerSpecItem>IBU 20</BeerSpecItem>
+                <BeerSpecItem>7,1% vol.</BeerSpecItem>
               </div>
               <Link to="/shop" className="btn-primary">
                 Jetzt bestellen
@@ -349,18 +473,7 @@ function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
         </div>
       </section>
 
-      <section className="section section--stats">
-        <div className="container">
-          <span className="section-label section-label--light">07</span>
-          <blockquote className="stats-quote">„Handwerklich gebraut mit Hingabe für die Region"</blockquote>
-          <div className="stats-grid">
-            <div className="stat"><span className="stat-value">27.711</span><span className="stat-label">Liter gebraut</span></div>
-            <div className="stat"><span className="stat-value">3.391</span><span className="stat-label">Kisten gepackt</span></div>
-            <div className="stat"><span className="stat-value">79.959</span><span className="stat-label">0,33l Flaschen</span></div>
-            <div className="stat"><span className="stat-value">4.485</span><span className="stat-label">Liter Fassbier</span></div>
-          </div>
-        </div>
-      </section>
+      <StatsSection />
 
       <section id="gallery" className="section section--gallery">
         <div className="container">
