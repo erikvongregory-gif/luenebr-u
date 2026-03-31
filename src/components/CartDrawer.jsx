@@ -1,8 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
+import ExpressCheckout from './ExpressCheckout'
 
 function CartDrawer({ isOpen, onClose }) {
+  const navigate = useNavigate()
   const { items, updateQuantity, removeItem, totalPrice, totalItems } = useCart()
+
+  const goCheckout = () => {
+    onClose()
+    navigate('/checkout')
+  }
 
   if (!isOpen) return null
 
@@ -48,10 +55,19 @@ function CartDrawer({ isOpen, onClose }) {
         </div>
         {items.length > 0 && (
           <div className="cart-drawer-footer">
+            <ExpressCheckout
+              className="store-express--compact"
+              showDivider={false}
+              onSelect={goCheckout}
+            />
+            <div className="cart-drawer-divider" role="presentation">
+              <span>oder</span>
+            </div>
             <div className="cart-total">
-              <span>Gesamt</span>
+              <span>Zwischensumme</span>
               <span>{totalPrice.toFixed(2).replace('.', ',')} €</span>
             </div>
+            <p className="cart-drawer-note">Mindestbestellwert 25 € · Steuern inkl.</p>
             <Link to="/checkout" className="btn-primary cart-checkout-btn" onClick={onClose}>
               Zur Kasse
             </Link>

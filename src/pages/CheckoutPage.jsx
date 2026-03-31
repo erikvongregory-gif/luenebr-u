@@ -1,13 +1,17 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { FORMSPREE_FORM_ID } from '../config'
+import ExpressCheckout, { StorePaymentBadges } from '../components/ExpressCheckout'
+import Reveal from '../components/Reveal'
 
 const MIN_ORDER = 25
 
 function CheckoutPage() {
   const { items, totalPrice, totalItems, clearCart } = useCart()
-  const [status, setStatus] = useState('idle') // idle | submitting | success | error
+  const [status, setStatus] = useState('idle')
+  const [expressHint, setExpressHint] = useState(false)
+  const formRef = useRef(null)
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -18,8 +22,18 @@ function CheckoutPage() {
     notes: ''
   })
 
+  useEffect(() => {
+    if (expressHint && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [expressHint])
+
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleExpressSelect = () => {
+    setExpressHint(true)
   }
 
   const handleSubmit = async (e) => {
@@ -68,101 +82,167 @@ function CheckoutPage() {
 
   if (totalItems === 0 && status !== 'success') {
     return (
-      <div className="checkout">
-        <div className="checkout-empty">
+      <div className="checkout checkout--store">
+        <Reveal className="checkout-empty" soft>
           <h1>Dein Warenkorb ist leer</h1>
           <p>Füge zuerst Produkte im Shop hinzu.</p>
           <Link to="/shop" className="btn-primary">Zum Shop</Link>
-        </div>
+        </Reveal>
       </div>
     )
   }
 
   if (status === 'success') {
     return (
-      <div className="checkout">
-        <div className="checkout-success">
-          <h1>Vielen Dank!</h1>
-          <p>Deine Bestellung wurde übermittelt. Wir melden uns in Kürze per E-Mail.</p>
+      <div className="checkout checkout--store">
+        <Reveal className="checkout-success" soft>
+          <div className="checkout-success-icon" aria-hidden>✓</div>
+          <h1>Vielen Dank für deine Bestellung</h1>
+          <p>Wir haben deine Anfrage erhalten und melden uns in Kürze mit der Bestätigung und den Zahlungsdetails.</p>
+          <StorePaymentBadges className="checkout-success-badges" />
           <Link to="/shop" className="btn-primary">Weiter einkaufen</Link>
-        </div>
+        </Reveal>
       </div>
     )
   }
 
   return (
-    <div className="checkout">
-      <div className="checkout-inner">
-        <h1 className="checkout-title">Kasse</h1>
+    <div className="checkout checkout--store">
+      <div className="checkout-store-wrap">
+        <Reveal as="nav" className="store-breadcrumb" aria-label="Brotkrumen" soft>
+          <Link to="/">Startseite</Link>
+          <span aria-hidden>/</span>
+          <Link to="/shop">Shop</Link>
+          <span aria-hidden>/</span>
+          <span className="store-breadcrumb__current">Kasse</span>
+        </Reveal>
 
-        <form className="checkout-form" onSubmit={handleSubmit}>
-          <section className="checkout-section">
-            <h2>Kontaktdaten</h2>
-            <label>
-              <span>Name *</span>
-              <input type="text" name="name" required value={form.name} onChange={handleChange} />
-            </label>
-            <label>
-              <span>E-Mail *</span>
-              <input type="email" name="email" required value={form.email} onChange={handleChange} />
-            </label>
-            <label>
-              <span>Telefon</span>
-              <input type="tel" name="phone" value={form.phone} onChange={handleChange} />
-            </label>
-          </section>
-
-          <section className="checkout-section">
-            <h2>Lieferadresse</h2>
-            <label>
-              <span>Straße & Hausnummer *</span>
-              <input type="text" name="street" required value={form.street} onChange={handleChange} />
-            </label>
-            <div className="checkout-row">
-              <label>
-                <span>PLZ *</span>
-                <input type="text" name="plz" required value={form.plz} onChange={handleChange} />
-              </label>
-              <label>
-                <span>Stadt *</span>
-                <input type="text" name="city" required value={form.city} onChange={handleChange} />
-              </label>
+        <div className="checkout-inner checkout-inner--store">
+          <Reveal as="header" className="checkout-store-header" soft delay={35}>
+            <h1 className="checkout-title">Kasse</h1>
+            <p className="checkout-subtitle">Sichere Bestellung · Versand in Deutschland</p>
+            <div className="checkout-trust">
+              <span>Verschlüsselte Übertragung</span>
+              <span>Persönliche Bestätigung</span>
+              <span>Regionaler Versand</span>
             </div>
-            <label>
-              <span>Anmerkungen</span>
-              <textarea name="notes" rows="3" value={form.notes} onChange={handleChange} placeholder="z.B. Klingel kaputt, Abstellplatz …" />
-            </label>
-          </section>
+          </Reveal>
 
-          {totalPrice < MIN_ORDER && (
-            <p className="checkout-min">Mindestbestellwert {MIN_ORDER} €. Aktuell: {totalPrice.toFixed(2).replace('.', ',')} €</p>
-          )}
+          <Reveal className="checkout-main" soft delay={70}>
+            <ExpressCheckout showDivider onSelect={handleExpressSelect} />
 
-          {status === 'error' && (
-            <p className="checkout-error">Es ist ein Fehler aufgetreten. Bitte versuche es erneut oder kontaktiere uns direkt.</p>
-          )}
+            {expressHint && (
+              <div className="checkout-express-hint" role="status">
+                Bitte fülle das Formular aus und sende die Bestellung ab. Den sicheren Zahlungslink (Apple Pay, Google Pay, PayPal und mehr) erhältst du von uns per E-Mail.
+              </div>
+            )}
 
-          <button type="submit" className="btn-primary checkout-submit" disabled={status === 'submitting'}>
-            {status === 'submitting' ? 'Wird gesendet …' : 'Bestellung abschließen'}
-          </button>
-        </form>
+            <form ref={formRef} id="checkout-form" className="checkout-form" onSubmit={handleSubmit}>
+              <Reveal as="section" className="checkout-section checkout-section--store" delay={0}>
+                <h2>Kontakt</h2>
+                <label>
+                  <span>E-Mail *</span>
+                  <input type="email" name="email" required autoComplete="email" value={form.email} onChange={handleChange} placeholder="name@beispiel.de" />
+                </label>
+                <label>
+                  <span>Vor- und Nachname *</span>
+                  <input type="text" name="name" required autoComplete="name" value={form.name} onChange={handleChange} />
+                </label>
+                <label>
+                  <span>Telefon</span>
+                  <input type="tel" name="phone" autoComplete="tel" value={form.phone} onChange={handleChange} placeholder="Optional" />
+                </label>
+              </Reveal>
 
-        <aside className="checkout-summary">
-          <h2>Deine Bestellung</h2>
-          <ul className="checkout-items">
-            {items.map((p) => (
-              <li key={p.id}>
-                <span>{p.name} × {p.quantity}</span>
-                <span>{(p.price * p.quantity).toFixed(2).replace('.', ',')} €</span>
-              </li>
-            ))}
-          </ul>
-          <div className="checkout-total">
-            <span>Gesamt</span>
-            <span>{totalPrice.toFixed(2).replace('.', ',')} €</span>
-          </div>
-          <p className="checkout-info">Zahlung per Überweisung nach Bestellbestätigung. Versandkosten werden dir mitgeteilt.</p>
-        </aside>
+              <Reveal as="section" className="checkout-section checkout-section--store" delay={55}>
+                <h2>Lieferung</h2>
+                <label>
+                  <span>Straße & Hausnummer *</span>
+                  <input type="text" name="street" required autoComplete="street-address" value={form.street} onChange={handleChange} />
+                </label>
+                <div className="checkout-row">
+                  <label>
+                    <span>PLZ *</span>
+                    <input type="text" name="plz" required autoComplete="postal-code" value={form.plz} onChange={handleChange} />
+                  </label>
+                  <label>
+                    <span>Stadt *</span>
+                    <input type="text" name="city" required autoComplete="address-level2" value={form.city} onChange={handleChange} />
+                  </label>
+                </div>
+                <label>
+                  <span>Anmerkungen</span>
+                  <textarea name="notes" rows="3" value={form.notes} onChange={handleChange} placeholder="z. B. Klingel, Abstellort …" />
+                </label>
+              </Reveal>
+
+              <Reveal as="section" className="checkout-section checkout-section--store checkout-section--payment" delay={110}>
+                <h2>Zahlung</h2>
+                <p className="checkout-payment-intro">
+                  Nach dem Absenden prüfen wir deine Bestellung und senden dir einen Zahlungslink – kompatibel mit Apple Pay, Google Pay und PayPal, sowie klassischer Banküberweisung.
+                </p>
+                <div className="checkout-payment-icons" aria-hidden>
+                  <span className="checkout-pay-pill">Apple Pay</span>
+                  <span className="checkout-pay-pill">Google Pay</span>
+                  <span className="checkout-pay-pill">PayPal</span>
+                  <span className="checkout-pay-pill">Karte</span>
+                  <span className="checkout-pay-pill">Überweisung</span>
+                </div>
+              </Reveal>
+
+              {totalPrice < MIN_ORDER && (
+                <p className="checkout-min">Mindestbestellwert {MIN_ORDER} €. Aktuell: {totalPrice.toFixed(2).replace('.', ',')} €</p>
+              )}
+
+              {status === 'error' && (
+                <p className="checkout-error">Es ist ein Fehler aufgetreten. Bitte versuche es erneut oder kontaktiere uns direkt.</p>
+              )}
+
+              <button type="submit" className="btn-primary checkout-submit checkout-submit--store" disabled={status === 'submitting'}>
+                {status === 'submitting' ? 'Wird gesendet …' : 'Bestellung abschicken'}
+              </button>
+              <p className="checkout-legal-hint">
+                Mit dem Absenden stimmst du der Verarbeitung deiner Daten zur Abwicklung der Bestellung zu.
+              </p>
+            </form>
+          </Reveal>
+
+          <Reveal as="aside" className="checkout-summary checkout-summary--store" soft delay={50}>
+            <div className="checkout-summary-card">
+              <h2 className="checkout-summary-title">Bestellübersicht</h2>
+              <ul className="checkout-items">
+                {items.map((p) => (
+                  <li key={p.id}>
+                    <span className="checkout-item-name">
+                      <span className="checkout-item-thumb-wrap">
+                        <img src={p.image} alt="" className="checkout-item-thumb" />
+                      </span>
+                      <span>
+                        {p.name}
+                        <span className="checkout-item-qty"> × {p.quantity}</span>
+                      </span>
+                    </span>
+                    <span>{(p.price * p.quantity).toFixed(2).replace('.', ',')} €</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="checkout-shipping-note">Versandkosten werden in der Bestätigung ausgewiesen.</p>
+              <div className="checkout-total checkout-total--grand">
+                <span>Gesamt</span>
+                <span>{totalPrice.toFixed(2).replace('.', ',')} €</span>
+              </div>
+              <div className="checkout-summary-meta">
+                <span>{totalItems} Artikel</span>
+                <span>Min. {MIN_ORDER.toFixed(2).replace('.', ',')} €</span>
+              </div>
+              <StorePaymentBadges className="checkout-summary-badges" />
+              <p className="checkout-info">
+                Du kannst mit <strong>PayPal</strong>, <strong>Apple Pay</strong>, <strong>Google Pay</strong>, Karte oder Überweisung bezahlen.
+                Den passenden Link schicken wir dir nach Prüfung der Bestellung per E-Mail.
+              </p>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </div>
   )

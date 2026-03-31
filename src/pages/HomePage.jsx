@@ -1,495 +1,185 @@
-import { useState, useRef, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Reveal from '../components/Reveal'
 import logoSrc from '../assets/logo.png'
-const INSTAGRAM_URL = 'https://www.instagram.com/luene_braeu/'
 
-const HANSEAT_SLIDES = [
-  { src: '/hanseat-seitlich.svg', alt: 'Das Hanseat – Seitenansicht' },
-  { src: '/hanseat.svg', alt: 'Das Hanseat' },
-]
 const PHONE = '+49 176 25686466'
 const EMAIL = 'info@luenebraeu.de'
+const INSTAGRAM_URL = 'https://www.instagram.com/luene_braeu/'
 
-const HERO_FRAME_COUNT = 91
-const HERO_FRAME_STEP_MOBILE = 2
-
-const STATS = [
-  { value: 27711, label: 'Liter gebraut', format: (n) => n.toLocaleString('de-DE'), icon: 'beer' },
-  { value: 3391, label: 'Kisten gepackt', format: (n) => n.toLocaleString('de-DE'), icon: 'crate' },
-  { value: 79959, label: '0,33l Flaschen', format: (n) => n.toLocaleString('de-DE'), icon: 'bottle' },
-  { value: 4485, label: 'Liter Fassbier', format: (n) => n.toLocaleString('de-DE'), icon: 'keg' },
+const BEERS = [
+  {
+    name: 'Hanseat Helles',
+    subtitle: 'Mild. Klar. Norddeutsch.',
+    image: '/hanseat.svg',
+    imageAlt: 'L�nebr�u Hanseat Helles Flasche',
+    bitterness: '18 IBU',
+    alcohol: '5,6% vol.',
+    color: 'EBC 7',
+  },
+  {
+    name: 'Luna Barrels',
+    subtitle: 'Holzfassgereift mit Tiefe',
+    image: '/luna-barrels.svg',
+    imageAlt: 'L�nebr�u Luna Barrels Flasche',
+    bitterness: '20 IBU',
+    alcohol: '7,1% vol.',
+    color: 'EBC 55',
+  },
 ]
 
-function useCountUp(end, duration, start) {
-  const [value, setValue] = useState(0)
-  useEffect(() => {
-    if (!start) return
-    let startTime = null
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp
-      const elapsed = timestamp - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      const easeOut = 1 - Math.pow(1 - progress, 2)
-      setValue(Math.floor(easeOut * end))
-      if (progress < 1) requestAnimationFrame(animate)
-    }
-    requestAnimationFrame(animate)
-  }, [end, duration, start])
-  return value
-}
-
-function StatIcon({ name }) {
-  const icons = {
-    beer: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M8 20h8M9 20V14h6v6M7 4h10l1 10H6L7 4z" /><path d="M12 4V2" /></svg>,
-    crate: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 12h16M12 4v16" /></svg>,
-    bottle: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 2h6v3l-2 14H11L9 5V2z" /><path d="M9 5h6" /></svg>,
-    keg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 7h14v14H5z" /><path d="M5 10h14M5 14h14M9 7V5a2 2 0 016 0v2" /></svg>,
-  }
-  return <span className="stat-icon" aria-hidden>{icons[name] || null}</span>
-}
-
-function StatItem({ stat, isVisible }) {
-  const value = useCountUp(stat.value, 2000, isVisible)
+function ProductMeta({ icon, label, value }) {
   return (
-    <div className="stat">
-      <StatIcon name={stat.icon} />
-      <span className="stat-value">{stat.format(value)}</span>
-      <span className="stat-label">{stat.label}</span>
-    </div>
-  )
-}
-
-function StatsSection() {
-  const ref = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true)
-      },
-      { threshold: 0.3 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <section ref={ref} className="section section--stats">
-      <div className="container">
-        <span className="section-label section-label--light">07</span>
-        <blockquote className="stats-quote">„Handwerklich gebraut mit Hingabe für die Region"</blockquote>
-        <div className="stats-grid">
-          {STATS.map((stat) => (
-            <StatItem key={stat.label} stat={stat} isVisible={isVisible} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function BeerSpecItem({ children }) {
-  const ref = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true)
-      },
-      { threshold: 0.5, rootMargin: '0px' }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <span ref={ref} className={`beer-spec-item ${isVisible ? 'beer-spec-item--visible' : ''}`}>
-      <svg className="beer-spec-border" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect className="beer-spec-rect" x="2" y="2" width="96" height="96" rx="12" fill="none" stroke="currentColor" strokeWidth="2" />
-      </svg>
-      {children}
+    <span className="product-meta-item" aria-label={`${label}: ${value}`}>
+      <span className="product-meta-icon" aria-hidden>{icon}</span>
+      <span className="product-meta-value">{value}</span>
     </span>
   )
 }
 
-function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
-  const [hanseatSlide, setHanseatSlide] = useState(0)
-  const [heroFrame, setHeroFrame] = useState(0)
-  const heroRef = useRef(null)
-  const heroFrameRef = useRef(0)
-
+function HomePage() {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
-  const isMobile = () =>
-    'ontouchstart' in window || navigator.maxTouchPoints > 0 ||
-    window.matchMedia('(max-width: 1024px)').matches ||
-    (typeof screen !== 'undefined' && screen.width <= 1024)
-
-  useEffect(() => {
-    if (isMobile()) {
-      const preloadBatch = (start, end) => {
-        for (let i = start; i <= end && i <= HERO_FRAME_COUNT; i += HERO_FRAME_STEP_MOBILE) {
-          const img = new Image()
-          img.src = `/hero-frames/frame-${String(i).padStart(4, '0')}.jpg`
-        }
-      }
-      preloadBatch(1, 30)
-      const t2 = setTimeout(() => preloadBatch(31, 60), 800)
-      const t3 = setTimeout(() => preloadBatch(61, HERO_FRAME_COUNT), 1600)
-      return () => { clearTimeout(t2); clearTimeout(t3) }
-    }
-    for (let i = 1; i <= HERO_FRAME_COUNT; i++) {
-      const img = new Image()
-      img.src = `/hero-frames/frame-${String(i).padStart(4, '0')}.jpg`
-    }
-  }, [])
-
-  useEffect(() => {
-    let cleanup = () => {}
-    let cancelled = false
-
-    const run = () => {
-      if (cancelled) return
-
-      // Touch-Geräte (Handy/Tablet) bekommen Autoplay – zuverlässiger als Viewport
-      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-      const isNarrow =
-        window.matchMedia('(max-width: 1024px)').matches ||
-        window.innerWidth <= 1024 ||
-        (typeof screen !== 'undefined' && screen.width <= 1024)
-      const isMobile = isTouch || isNarrow
-
-      if (isMobile) {
-        const imgEl = heroRef.current?.querySelector('.hero-video--frames')
-        const duration = 4000
-        const mobileFrameCount = Math.ceil(HERO_FRAME_COUNT / HERO_FRAME_STEP_MOBILE)
-        const frameDuration = duration / mobileFrameCount
-        let rafId = null
-        let startTime = null
-
-        const animate = (timestamp) => {
-          if (cancelled) return
-          if (startTime === null) startTime = timestamp
-          const elapsed = timestamp - startTime
-          const step = Math.floor(elapsed / frameDuration)
-          const frame = Math.min(mobileFrameCount - 1, step) * HERO_FRAME_STEP_MOBILE
-          if (frame !== heroFrameRef.current) {
-            heroFrameRef.current = frame
-            if (imgEl) {
-              imgEl.src = `/hero-frames/frame-${String(frame + 1).padStart(4, '0')}.jpg`
-            } else {
-              setHeroFrame(frame)
-            }
-          }
-          if (step < mobileFrameCount) {
-            rafId = requestAnimationFrame(animate)
-          }
-        }
-
-        rafId = requestAnimationFrame(animate)
-        cleanup = () => {
-          if (rafId) cancelAnimationFrame(rafId)
-        }
-        return
-      }
-
-      const hero = heroRef.current
-      if (!hero) return
-
-      let rafId = null
-
-      const updateFrame = () => {
-        if (cancelled) return
-        const rect = hero.getBoundingClientRect()
-        const scrollRange = hero.offsetHeight - window.innerHeight
-        if (scrollRange <= 0) {
-          rafId = null
-          return
-        }
-        const scrolledPast = Math.max(0, -rect.top)
-        const progress = Math.min(1, scrolledPast / scrollRange)
-        const frame = Math.min(
-          HERO_FRAME_COUNT - 1,
-          Math.floor(progress * HERO_FRAME_COUNT)
-        )
-        if (frame !== heroFrameRef.current) {
-          heroFrameRef.current = frame
-          setHeroFrame(frame)
-        }
-        rafId = null
-      }
-
-      const onScroll = () => {
-        if (rafId) return
-        rafId = requestAnimationFrame(updateFrame)
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true })
-      updateFrame()
-
-      cleanup = () => {
-        if (rafId) cancelAnimationFrame(rafId)
-        window.removeEventListener('scroll', onScroll)
-      }
-    }
-
-    // Verzögerung: Viewport-Dimensionen sind auf Mobile oft erst nach kurzer Zeit korrekt
-    const timeoutId = setTimeout(run, 100)
-
-    return () => {
-      cancelled = true
-      clearTimeout(timeoutId)
-      cleanup()
-    }
-  }, [])
-
-  const nextSlide = () => setHanseatSlide((i) => (i + 1) % HANSEAT_SLIDES.length)
-  const prevSlide = () => setHanseatSlide((i) => (i - 1 + HANSEAT_SLIDES.length) % HANSEAT_SLIDES.length)
-
   return (
     <>
-      <header id="hero" ref={heroRef} className="hero hero--video">
+      <header id="hero" className="hero hero--video hero--luxury">
         <div className="hero-video-wrap">
-          <img
-            className="hero-video hero-video--frames"
-            src={`/hero-frames/frame-${String(heroFrame + 1).padStart(4, '0')}.jpg`}
-            alt=""
-            aria-hidden
-          />
-          <div className="hero-video-overlay" aria-hidden />
-          <div className="hero-content">
-            <img src={logoSrc} alt="Lüne Bräu" className="hero-logo" />
-            <p className="tagline">Handwerklich gebraut mit Hingabe für die Region</p>
-            <p className="hero-subline">Handcrafted since 2017</p>
-            <div className="divider" />
-            <Link to="/shop" className="btn-primary">
-              Jetzt bestellen
-            </Link>
+          <video className="hero-video" autoPlay loop muted playsInline preload="metadata" aria-hidden>
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+          <div className="hero-video-overlay hero-video-overlay--luxury" aria-hidden />
+
+          <div className="hero-content hero-content--luxury">
+            <img src={logoSrc} alt="L�nebr�u" className="hero-logo" />
+            <p className="hero-kicker">Lueneburger Tradition trifft auf Modern Craft</p>
+            <h1 className="hero-headline">Lueneburgs fluessiges Erbe. Frisch gebraut. Ehrlich genossen.</h1>
+            <div className="hero-cta-row">
+              <button
+                type="button"
+                className="btn-primary btn-primary--gold"
+                onClick={() => document.getElementById('biere')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Unsere Biere
+              </button>
+              <a href="#kontakt" className="btn-outline">Kontakt aufnehmen</a>
+            </div>
           </div>
-          <button
-            type="button"
-            className="hero-scroll"
-            onClick={() => document.getElementById('biere')?.scrollIntoView({ behavior: 'smooth' })}
-            aria-label="Weiter scrollen"
-          >
-            <span className="hero-scroll-text">Scroll</span>
-            <span className="hero-scroll-line" />
-          </button>
         </div>
       </header>
 
-      <section id="biere" className="section section--biere">
+      <Reveal as="section" id="biere" className="section section--biere section--luxury" soft>
         <div className="container">
-          <span className="section-label">01</span>
-          <h2 className="section-title">Unsere Biere</h2>
-          
-          <article className="beer-card beer-card--hanseat">
-            <div className="beer-card-image-wrap beer-card-slideshow">
-              <button type="button" className="slideshow-btn slideshow-btn--prev" onClick={prevSlide} aria-label="Vorheriges Bild" />
-              <div className="slideshow-inner">
-                {HANSEAT_SLIDES.map((slide, i) => (
+          <span className="section-label">01 Produktwelt</span>
+          <h2 className="section-title">Unsere Biere als Signature Bottles</h2>
+          <p className="section-lead section-lead--light">
+            Charakterstarke Sorten mit klarer Handschrift - von modern interpretiertem Hellem bis zur limitierten Fassreifung.
+          </p>
+
+          <div className="product-showcase-grid" role="list">
+            {BEERS.map((beer, index) => (
+              <Reveal as="article" className="product-card" key={beer.name} delay={index * 90} role="listitem">
+                <div className="product-bottle-wrap">
                   <img
-                    key={slide.src}
-                    src={slide.src}
-                    alt={slide.alt}
-                    className={`beer-card-image ${i === hanseatSlide ? 'is-active' : ''}`}
+                    src={beer.image}
+                    alt={beer.imageAlt}
+                    className="product-bottle"
+                    loading="lazy"
+                    decoding="async"
                   />
-                ))}
-              </div>
-              <button type="button" className="slideshow-btn slideshow-btn--next" onClick={nextSlide} aria-label="Nächstes Bild" />
-              <div className="slideshow-dots">
-                {HANSEAT_SLIDES.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`slideshow-dot ${i === hanseatSlide ? 'is-active' : ''}`}
-                    onClick={() => setHanseatSlide(i)}
-                    aria-label={`Bild ${i + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="beer-card-content">
-              <span className="beer-label">Unser erstes Bier</span>
-              <h3 className="beer-title">Das Hanseat</h3>
-              <p className="beer-lead">
-                Ein Kreativbier auf Basis eines Handelsbieres des 16. Jahrhunderts – damals durch die Hanse weltweit verschifft.
-              </p>
-              <p className="beer-desc">
-                Süffig, leicht und zart gebittert – mit neuem Schliff – zieht diese moderne Version heute wieder in die Hansestadt ein.
-              </p>
-              <div className="beer-specs">
-                <BeerSpecItem>EBC 7</BeerSpecItem>
-                <BeerSpecItem>IBU 18</BeerSpecItem>
-                <BeerSpecItem>5,6% vol.</BeerSpecItem>
-              </div>
-              <p className="beer-availability">
-                Erhältlich in vielen Lüneburger Läden und ausgewählten Restaurants vom Fass.
-              </p>
-              <Link to="/shop" className="btn-primary">
-                Jetzt bestellen
-              </Link>
-            </div>
-          </article>
-
-          <article className="beer-card beer-card--luna">
-            <div className="beer-card-content">
-              <span className="beer-label">Die limitierten Schätze aus dem Holzfass</span>
-              <h3 className="beer-title">Luna Barrels</h3>
-              <p>
-                Lassen Sie sich von unserem <strong>Luna Barrels Calvados Cask</strong> in eine einzigartige Welt holzfassgereifter Biere entführen. Tief bernsteinfarben vereinen sich feine Noten von Karamell und frischem Schwarzbrot mit Anklängen von Apfelblüte und gelbem Apfel.
-              </p>
-              <p>
-                Am Gaumen: cremig, buttrige Texturen, malzige Tiefe, Bitterschokolade und eine elegante, fruchtige Säure – mit feinen Bittertönen im Abgang.
-              </p>
-              <p className="beer-limit">Jedes Jahr aus einem anderen Holzfass · <strong>Auf 550 Flaschen limitiert!</strong></p>
-              <div className="beer-specs">
-                <BeerSpecItem>EBC 55</BeerSpecItem>
-                <BeerSpecItem>IBU 20</BeerSpecItem>
-                <BeerSpecItem>7,1% vol.</BeerSpecItem>
-              </div>
-              <Link to="/shop" className="btn-primary">
-                Jetzt bestellen
-              </Link>
-            </div>
-            <div className="beer-card-image-wrap">
-              <img src="/luna-barrels.svg" alt="Luna Barrels" className="beer-card-image" />
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section id="fassbier" className="section section--tap">
-        <div className="container">
-          <span className="section-label">02</span>
-          <h2 className="section-title">Schankanlage mieten</h2>
-          <div className="tap-card">
-            <div className="tap-image">
-              <img src="/zapfen.svg" alt="" aria-hidden="true" />
-            </div>
-            <div className="tap-content">
-              <h3>Schankanlage für Fassbier mieten?</h3>
-              <p>
-                Du möchtest Lüne Bräu Fassbier auf deiner nächsten Party ausschenken? Wir vermieten dir gerne eine Zapfanlage zum Bier dazu. Kontaktiere uns per WhatsApp, Mail oder telefonisch.
-              </p>
-              <a href={`https://wa.me/4917625686466`} target="_blank" rel="noopener noreferrer" className="btn-primary">
-                Kontakt aufnehmen
-              </a>
-            </div>
+                  <span className="product-bottle-shine" aria-hidden />
+                </div>
+                <div className="product-card-content">
+                  <p className="product-subtitle">{beer.subtitle}</p>
+                  <h3 className="product-title">{beer.name}</h3>
+                  <div className="product-meta-row">
+                    <ProductMeta icon="I" label="Bitterkeit" value={beer.bitterness} />
+                    <ProductMeta icon="A" label="Alkohol" value={beer.alcohol} />
+                    <ProductMeta icon="F" label="Farbe" value={beer.color} />
+                  </div>
+                  <Link to="/shop" className="btn-primary">Jetzt entdecken</Link>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <section id="haendler" className="section section--haendler">
-        <div className="container">
-          <span className="section-label">03</span>
-          <h2 className="section-title">Unsere Händler</h2>
-          <div className="haendler-grid">
-            <div className="haendler-group">
-              <h4>EDEKA, REWE & Co.</h4>
-              <ul>
-                {['Edeka Bergmann Adendorf', 'Edeka Bergmann Saline', 'Edeka Bergmann Löwecenter', 'Sandpassage Tschorn', 'Tschorn Bockelsberg', 'Rewe Krause Hanseviertel', 'Edeka Düver Salzhausen', 'Rewe Ferdis Markt Bleckede', 'FAMILA Lüneburg', 'FAMILA Winsen', 'Edeka Kröger Stelle (Ashausen)', 'EDEKA Altenburg Dannenberg', 'Edeka Klein Thorner Straße'].map((h, i) => (
-                  <li key={i}>{h}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="haendler-group">
-              <h4>Einzelhandel</h4>
-              <ul>
-                {['Wabnitz Weinhandlung', 'Weynstock Wein und Spirits Hamburg', 'Erich Rothe GmbH'].map((h, i) => (
-                  <li key={i}>{h}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="haendler-group">
-              <h4>Gastronomie</h4>
-              <ul>
-                {['VISCVLE', 'Calluna Eis', 'ZweiLieben', 'STIMBEKHOF Oberhaverbeck', 'STRANDGUT Stover Strand'].map((h, i) => (
-                  <li key={i}>{h}</li>
-                ))}
-              </ul>
-            </div>
+      <Reveal as="section" id="ueber-mich" className="section section--story" soft>
+        <div className="container story-shell">
+          <div className="story-media">
+            <img
+              src="/finn-traum.png"
+              alt="Braukessel und Handwerk bei L�nebr�u"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
-        </div>
-      </section>
-
-      <section id="ueber-mich" className="section section--traum">
-        <div className="container">
-          <span className="section-label">04</span>
-          <h2 className="section-title">Der Traum</h2>
-          <div className="traum-content">
+          <Reveal className="story-card" delay={80}>
+            <span className="section-label">02 Handwerk & Herkunft</span>
+            <h2 className="section-title">Regional. Praezise. Mit Haltung gebraut.</h2>
             <p>
-              Als ich 2017 mit dem Hobbybrauen angefangen habe, hätte ich mir nie erträumt, dass mein eigenes Bier eines Tages zu kaufen sein wird. Damals braute ich mein erstes Bier Zuhause mit dem 20l Einkocher meiner Oma – heute braue ich mein Bier in 2000l Chargen als Gipsy Brauer bei Wildwuchs Brauwerk.
+              Luenebraeu steht fuer saubere Rezepturen, ehrliche Rohstoffe und einen Geschmack, der in Lueneburg verwurzelt ist.
+              Jede Charge verbindet traditionelles Brauhandwerk mit dem Anspruch moderner Craft-Kultur.
             </p>
             <p>
-              Alle Bierkreationen entspringen meiner Hobbybrauerküche und sind mit viel Leidenschaft und Liebe fürs Detail kreiert. Probiere gerne selbst und lass dich von meiner Leidenschaft anstecken!
+              Vom ersten Sud bis zur finalen Abfuellung bleibt alles in einer Hand: bewusst klein, kompromisslos in der Qualitaet
+              und gemacht fuer Menschen, die Charakter im Glas suchen.
             </p>
-            <p className="traum-sign">Dein Finn</p>
-          </div>
+          </Reveal>
         </div>
-      </section>
+      </Reveal>
 
-      <section className="section section--crew">
+      <Reveal as="section" id="fassbier" className="section section--gastro" soft>
         <div className="container">
-          <span className="section-label">05</span>
-          <h2 className="section-title">#CREW</h2>
-          <div className="crew-grid">
-            <div className="crew-card">
-              <div className="crew-avatar">M</div>
-              <h4>Marlena</h4>
-              <p>Barchefin & Biermodel · Seit 2022 im Team</p>
-            </div>
-            <div className="crew-card">
-              <div className="crew-avatar">D</div>
-              <h4>Doro</h4>
-              <p>Bierzapferin, Kalligraphie-Expertin & Biermodel · Seit 2023 im Team</p>
-            </div>
+          <span className="section-label">03 Gastronomie</span>
+          <h2 className="section-title">Lueneburg erleben. Ausschank mit Atmosphaere.</h2>
+          <div className="bento-grid">
+            <Reveal className="bento-card bento-card--large" delay={30}>
+              <img src="/zapfen.svg" alt="Ausschank und gezapftes Bier" loading="lazy" decoding="async" />
+              <div className="bento-caption">Ausschankkultur mit Charakter</div>
+            </Reveal>
+            <Reveal className="bento-card" delay={90}>
+              <img src="/hanseat-seitlich.svg" alt="Bier und Food Pairing" loading="lazy" decoding="async" />
+              <div className="bento-caption">Geselligkeit und Food Pairing</div>
+            </Reveal>
+            <Reveal className="bento-card" delay={130}>
+              <img src="/hanseat.svg" alt="Ambiente in Lueneburg" loading="lazy" decoding="async" />
+              <div className="bento-caption">Altstadtflair trifft Craft-Vibe</div>
+            </Reveal>
           </div>
-        </div>
-      </section>
-
-      <section className="section section--sweetie">
-        <div className="container">
-          <span className="section-label">06</span>
-          <h2 className="section-title">Sweetie & Helen</h2>
-          <p className="section-subtitle">Powered by Lüne Bräu – Unsere Unterstützung für Dressurreiterin Helen Kretzschmar</p>
-          <div className="sweetie-content">
-            <p>
-              Bei Lüne Bräu unterstützen wir Menschen aus unserer Region, die mit Leidenschaft und Können ihren Weg gehen. Eine davon ist <strong>Helen Kretzschmar</strong> – eine talentierte Dressurreiterin mit Herzblut und Präzision im Sattel.
-            </p>
-            <p>
-              An ihrer Seite: die elegante Stute <strong>Sweet Caramel H</strong>, liebevoll „Sweetie“ genannt. Seit dieser Saison sind wir offizieller Partner und statten die beiden mit Equipment aus, das unser Lüne Bräu Logo trägt.
-            </p>
-            <p className="sweetie-tagline"><strong>Leidenschaft, Präzision und Regionalität – das verbindet uns.</strong></p>
-          </div>
-        </div>
-      </section>
-
-      <StatsSection />
-
-      <section id="gallery" className="section section--gallery">
-        <div className="container">
-          <span className="section-label">08</span>
-          <h2 className="section-title">Gallery</h2>
-          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="instagram-cta">
-            Hier geht's zu Instagram →
+          <a href={`https://wa.me/4917625686466`} target="_blank" rel="noopener noreferrer" className="btn-primary btn-gastro">
+            Fassbier anfragen
           </a>
-          <div className="gallery-placeholder">
-            <p>Folge uns auf Instagram für aktuelle Bilder und Stories</p>
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">@luene_braeu</a>
-          </div>
         </div>
-      </section>
+      </Reveal>
 
-      <footer className="footer">
+      <Reveal as="section" id="haendler" className="section section--regional" soft>
+        <div className="container regional-grid">
+          <div>
+            <span className="section-label">04 Regionalitaet</span>
+            <h2 className="section-title">Verwurzelt in der Stadt, praesent in der Region.</h2>
+          </div>
+          <ul className="regional-list">
+            <li>Small-Batch-Braukultur aus Lueneburg</li>
+            <li>Partnerschaften mit Handel und Gastronomie vor Ort</li>
+            <li>Kurze Wege, frische Ware, persoenlicher Kontakt</li>
+          </ul>
+        </div>
+      </Reveal>
+
+      <Reveal as="section" id="gallery" className="section section--gallery section--dark" soft>
+        <div className="container gallery-luxury">
+          <span className="section-label section-label--light">05 Community</span>
+          <h2 className="section-title">Mehr Impressionen aus der Luenebraeu Welt</h2>
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="btn-outline">
+            @luene_braeu auf Instagram
+          </a>
+        </div>
+      </Reveal>
+
+      <footer id="kontakt" className="footer footer--luxury">
         <div className="container footer-grid">
           <div className="footer-contact">
             <h4>Kontakt</h4>
@@ -497,16 +187,10 @@ function HomePage({ scrollTo, scrolled, mobileNavOpen, setMobileNavOpen }) {
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
           </div>
           <div className="footer-business">
-            <h4>Geschäftskunde?</h4>
-            <p>Du möchtest unsere Produkte in deinem Geschäft führen? Kontaktiere uns für eine individuelle Lösung.</p>
+            <h4>Business</h4>
+            <p>Du willst Luenebraeu ausschenken oder vertreiben? Wir erstellen dir ein passendes Gastronomie- oder Handelskonzept.</p>
           </div>
-          <div className="footer-links">
-            <a href="#">Impressum</a>
-            <a href="#">Datenschutzerklärung</a>
-          </div>
-          <div className="footer-copy">
-            © {new Date().getFullYear()} Lüne Bräu · Lüneburg
-          </div>
+          <div className="footer-copy">� {new Date().getFullYear()} Luenebraeu � Lueneburg</div>
         </div>
       </footer>
     </>
