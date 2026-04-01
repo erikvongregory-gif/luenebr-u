@@ -16,17 +16,17 @@ const INSTAGRAM_PREVIEWS = [
 
 const BEERS = [
   {
-    name: 'Hanseat',
+    name: 'Hanseat Helles',
     subtitle: 'Mild. Klar. Norddeutsch.',
     image: '/hanseat-photo.png',
     imageClass: 'product-bottle--hanseat',
-    imageAlt: 'Lüne Bräu Hanseat Flasche',
+    imageAlt: 'Lüne Bräu Hanseat Helles Flasche',
     bitterness: '18 IBU',
     alcohol: '5,6% vol.',
     color: 'EBC 7',
-    price: '2,48 €',
+    price: '2,80 €',
     priceUnit: '/ 0,33 l Flasche',
-    badge: 'Sold Out',
+    badge: null,
     soldOut: true,
   },
   {
@@ -150,9 +150,18 @@ function HomePage() {
                     </p>
                   )}
                   {beer.soldOut ? (
-                    <button type="button" className="btn-primary product-card-cta" disabled aria-disabled="true">
-                      Sold Out
-                    </button>
+                    <div>
+                      <span className="product-card-soldout">
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+                          <circle cx="7" cy="7" r="5.5" />
+                          <path d="M7 4v3.5M7 9.5v.5" />
+                        </svg>
+                        Aktuell ausverkauft
+                      </span>
+                      <span className="product-card-soldout-note">
+                        Bald wieder verfügbar — meld dich gerne
+                      </span>
+                    </div>
                   ) : (
                     <Link to="/shop" className="btn-primary product-card-cta">
                       {CART_ICON} In den Warenkorb
@@ -395,21 +404,71 @@ function HomePage() {
       </Reveal>
 
       <footer id="kontakt" className="footer footer--luxury">
-        <div className="container footer-grid">
-          <div className="footer-contact">
-            <h4>Kontakt</h4>
-            <a href={`tel:${PHONE.replace(/\s/g, '')}`}>{PHONE}</a>
-            <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        <div className="footer-inner">
+          <div className="footer-top">
+            <div className="footer-brand">
+              <img src={logoSrc} alt="Lüne Bräu" className="footer-logo" />
+              <p className="footer-brand-claim">Handwerklich gebraut<br />mit Hingabe für die Region.</p>
+              <a
+                href={`https://wa.me/4917625686466`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary footer-cta"
+              >
+                Jetzt bestellen
+              </a>
+            </div>
+
+            <div className="footer-nav">
+              <h4>Navigation</h4>
+              <a href="#biere">Unsere Biere</a>
+              <a href="#ueber-mich">Story</a>
+              <a href="#fassbier">Ausschank</a>
+              <a href="#haendler">Regionalität</a>
+              <a href="#gallery">Community</a>
+              <Link to="/shop">Shop</Link>
+            </div>
+
+            <div className="footer-contact-col">
+              <h4>Kontakt</h4>
+              <a href={`tel:${PHONE.replace(/\s/g, '')}`}>{PHONE}</a>
+              <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+              <a
+                href="https://www.instagram.com/luene_braeu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-instagram"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <rect x="2" y="2" width="20" height="20" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+                @luene_braeu
+              </a>
+            </div>
+
+            <div className="footer-business-col">
+              <h4>Business</h4>
+              <p>Du willst Lüne Bräu ausschenken oder vertreiben? Wir erstellen dir ein passendes Konzept.</p>
+              <a
+                href={`https://wa.me/4917625686466`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-business-link"
+              >
+                Händler werden →
+              </a>
+            </div>
           </div>
-          <div className="footer-business">
-            <h4>Business</h4>
-            <p>Du willst Lüne Bräu ausschenken oder vertreiben? Wir erstellen dir ein passendes Gastronomie- oder Handelskonzept.</p>
+
+          <div className="footer-bottom">
+            <span>© {new Date().getFullYear()} Lüne Bräu · Lüneburg</span>
+            <div className="footer-legal">
+              <Link to="/impressum">Impressum</Link>
+              <Link to="/datenschutz">Datenschutz</Link>
+            </div>
           </div>
-          <div className="footer-links">
-            <Link to="/impressum">Impressum</Link>
-            <Link to="/datenschutz">Datenschutz</Link>
-          </div>
-          <div className="footer-copy">© {new Date().getFullYear()} Lüne Bräu · Lüneburg</div>
         </div>
       </footer>
     </>
