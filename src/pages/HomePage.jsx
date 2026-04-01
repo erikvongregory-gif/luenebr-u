@@ -381,6 +381,10 @@ function HomePage() {
             <h4>Business</h4>
             <p>Du willst Lüne Bräu ausschenken oder vertreiben? Wir erstellen dir ein passendes Gastronomie- oder Handelskonzept.</p>
           </div>
+          <div className="footer-links">
+            <Link to="/impressum">Impressum</Link>
+            <Link to="/datenschutz">Datenschutz</Link>
+          </div>
           <div className="footer-copy">© {new Date().getFullYear()} Lüne Bräu · Lüneburg</div>
         </div>
       </footer>

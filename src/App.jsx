@@ -4,6 +4,8 @@ import logoSrc from './assets/logo.png'
 import HomePage from './pages/HomePage'
 import ShopPage from './pages/ShopPage'
 import CheckoutPage from './pages/CheckoutPage'
+import ImprintPage from './pages/ImprintPage'
+import PrivacyPage from './pages/PrivacyPage'
 import CartDrawer from './components/CartDrawer'
 import { CartProvider, useCart } from './context/CartContext'
 
@@ -118,6 +120,9 @@ function App() {
   const [ageVerified, setAgeVerified] = useState(() => 
     typeof window !== 'undefined' && localStorage.getItem('luenebraeu-age') === 'verified-16'
   )
+  const [cookieConsent, setCookieConsent] = useState(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('luenebraeu-cookie-consent') : null
+  )
 
   useEffect(() => {
     const minLoadTime = 2000
@@ -194,6 +199,11 @@ function App() {
     window.location.href = 'https://www.google.com'
   }
 
+  const handleCookieConsent = (value) => {
+    localStorage.setItem('luenebraeu-cookie-consent', value)
+    setCookieConsent(value)
+  }
+
   if (loading) {
     return (
       <div className={`loader ${loaderExiting ? 'loader--exit' : ''}`}>
@@ -241,8 +251,25 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/impressum" element={<ImprintPage />} />
+          <Route path="/datenschutz" element={<PrivacyPage />} />
         </Routes>
         <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+        {!cookieConsent && (
+          <aside className="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie-Einstellungen">
+            <p className="cookie-banner-text">
+              Wir verwenden Cookies, um die Website sicher zu betreiben und dein Erlebnis zu verbessern.
+            </p>
+            <div className="cookie-banner-actions">
+              <button type="button" className="btn-outline" onClick={() => handleCookieConsent('declined')}>
+                Ablehnen
+              </button>
+              <button type="button" className="btn-primary" onClick={() => handleCookieConsent('accepted')}>
+                Alle akzeptieren
+              </button>
+            </div>
+          </aside>
+        )}
       </div>
     </CartProvider>
   )
