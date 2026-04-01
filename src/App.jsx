@@ -9,7 +9,7 @@ import { CartProvider, useCart } from './context/CartContext'
 
 const PHONE = '+49 176 25686466'
 
-const HOME_SECTION_IDS = ['hero', 'biere', 'ueber-mich', 'fassbier', 'haendler', 'gallery']
+const HOME_SECTION_IDS = ['hero', 'ueber-mich', 'biere', 'fassbier', 'haendler', 'gallery']
 
 function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen, activeHomeSection }) {
   const { totalItems } = useCart()
@@ -46,6 +46,14 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
           Start
         </a>
         <a
+          href={isHome ? '#ueber-mich' : '/'}
+          className={sectionClass('ueber-mich')}
+          aria-current={isHome && activeHomeSection === 'ueber-mich' ? 'true' : undefined}
+          onClick={(e) => { e.preventDefault(); scrollTo('ueber-mich'); }}
+        >
+          Story
+        </a>
+        <a
           href={isHome ? '#biere' : '/'}
           className={sectionClass('biere')}
           aria-current={isHome && activeHomeSection === 'biere' ? 'true' : undefined}
@@ -59,7 +67,7 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
           aria-current={isHome && activeHomeSection === 'fassbier' ? 'true' : undefined}
           onClick={(e) => { e.preventDefault(); scrollTo('fassbier'); }}
         >
-          Gastro
+          Ausschank
         </a>
         <a
           href={isHome ? '#haendler' : '/'}
@@ -68,14 +76,6 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
           onClick={(e) => { e.preventDefault(); scrollTo('haendler'); }}
         >
           Regional
-        </a>
-        <a
-          href={isHome ? '#ueber-mich' : '/'}
-          className={sectionClass('ueber-mich')}
-          aria-current={isHome && activeHomeSection === 'ueber-mich' ? 'true' : undefined}
-          onClick={(e) => { e.preventDefault(); scrollTo('ueber-mich'); }}
-        >
-          Story
         </a>
         <a
           href={isHome ? '#gallery' : '/'}
@@ -115,7 +115,7 @@ function App() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [ageVerified, setAgeVerified] = useState(() => 
-    typeof window !== 'undefined' && localStorage.getItem('luenebraeu-age') === 'verified'
+    typeof window !== 'undefined' && localStorage.getItem('luenebraeu-age') === 'verified-16'
   )
 
   useEffect(() => {
@@ -164,7 +164,7 @@ function App() {
     const updateActiveSection = () => {
       const navEl = document.querySelector('.nav')
       const navH = navEl?.offsetHeight ?? 72
-      const line = window.scrollY + navH + 16
+      const line = window.scrollY + navH + window.innerHeight * 0.28
       let active = HOME_SECTION_IDS[0]
       for (const id of HOME_SECTION_IDS) {
         const el = document.getElementById(id)
@@ -185,8 +185,12 @@ function App() {
   }, [location.pathname])
 
   const verifyAge = () => {
-    localStorage.setItem('luenebraeu-age', 'verified')
+    localStorage.setItem('luenebraeu-age', 'verified-16')
     setAgeVerified(true)
+  }
+
+  const rejectAge = () => {
+    window.location.href = 'https://www.google.com'
   }
 
   if (loading) {
@@ -207,9 +211,15 @@ function App() {
       <div className="age-gate">
         <div className="age-gate-content">
           <img src={logoSrc} alt="Lüne Bräu" className="age-gate-logo" />
-          <h2>Bitte bestätige dein Alter</h2>
-          <p>Diese Seite ist nur für Personen ab 18 Jahren.</p>
-          <button className="btn-primary" onClick={verifyAge}>Bestätigen</button>
+          <h2>Altersprüfung</h2>
+          <p className="age-gate-lead">Der Verkauf von Bier erfolgt nur an Personen ab 16 Jahren.</p>
+          <p className="age-gate-note">
+            Mit dem Betreten bestätigst du, dass du mindestens 16 Jahre alt bist.
+          </p>
+          <div className="age-gate-actions">
+            <button className="btn-primary" onClick={verifyAge}>Ich bin mindestens 16</button>
+            <button className="btn-outline age-gate-decline" onClick={rejectAge}>Ich bin unter 16</button>
+          </div>
         </div>
       </div>
     )
