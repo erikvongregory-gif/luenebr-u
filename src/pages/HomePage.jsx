@@ -43,6 +43,20 @@ const BEERS = [
     badge: 'Special Edition',
     soldOut: false,
   },
+  {
+    name: 'Stint Schorle',
+    subtitle: 'Radler mit Zitrone',
+    image: '/stint-schorle.webp',
+    imageClass: 'product-bottle--stint',
+    imageAlt: 'Lüne Bräu Stint Schorle Flasche',
+    bitterness: '10 IBU',
+    alcohol: '3,9% vol.',
+    color: 'EBC 6',
+    price: '3,50 €',
+    priceUnit: '/ 0,33 l Flasche',
+    badge: 'Sold Out',
+    soldOut: true,
+  },
 ]
 
 const ICONS = {

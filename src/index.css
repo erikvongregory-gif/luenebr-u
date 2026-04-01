@@ -3473,8 +3473,16 @@ body {
 
 .product-showcase-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2rem;
+}
+
+@media (min-width: 1001px) {
+  .product-showcase-grid > .product-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    justify-self: stretch;
+    width: 100%;
+  }
 }
 
 .product-card {
@@ -3512,10 +3520,10 @@ body {
   width: min(310px, 88%);
   height: clamp(360px, 38vw, 460px);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   border-radius: 16px;
-  overflow: visible;
+  overflow: hidden;
   isolation: isolate;
 }
 
@@ -3526,17 +3534,30 @@ body {
   height: 100%;
   max-width: 100%;
   object-fit: contain;
-  transform-origin: center bottom;
+  transform-origin: center center;
   transform: scale(var(--bottle-scale));
   transition: transform 0.45s ease;
 }
 
 .product-bottle--hanseat {
-  --bottle-scale: 1.06;
+  --bottle-scale: 1.32;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .product-bottle--luna {
-  --bottle-scale: 1.06;
+  --bottle-scale: 1.32;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-bottle--stint {
+  --bottle-scale: 1.32;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .product-bottle-shine {
@@ -5488,6 +5509,45 @@ body {
   }
 }
 
+/* Sold Out Button — Palette B konform */
+.shop-card .btn-outline[disabled],
+.shop-card-soldout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  width: 100%;
+  padding: 0.56rem 1rem;
+  border-radius: 8px;
+  border: 1.5px solid rgba(181, 114, 42, 0.3);
+  background: transparent;
+  color: rgba(14, 35, 64, 0.35);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .footer h4,
+  .footer a,
+  .footer p,
+  .footer-copy {
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+}
+
 /* Sweetie Desktop Feinschliff */
 @media (min-width: 1001px) {
   .section--sweetie .container {
@@ -5687,15 +5747,28 @@ body {
 
   .footer-brand {
     grid-column: 1 / -1;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 1.25rem;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.9rem;
   }
 
   .footer-brand-claim {
-    flex: 1;
-    min-width: 160px;
+    flex: 0 1 auto;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .footer-logo {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .footer-cta {
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
