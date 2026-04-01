@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import logoSrc from './assets/logo.png'
 import HomePage from './pages/HomePage'
@@ -11,10 +11,12 @@ import { CartProvider, useCart } from './context/CartContext'
 
 const PHONE = '+49 176 25686466'
 
-const HOME_SECTION_IDS = ['hero', 'biere', 'ueber-mich', 'fassbier', 'haendler', 'gallery']
+const HOME_SECTION_IDS = ['hero', 'biere', 'ueber-mich', 'fassbier', 'haendler', 'crew', 'gallery']
 
 function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen, activeHomeSection }) {
   const { totalItems } = useCart()
+  const prevTotalItemsRef = useRef(totalItems)
+  const [cartBump, setCartBump] = useState(false)
   const location = useLocation()
   const isHome = location.pathname === '/'
   const shopRouteActive = location.pathname === '/shop' || location.pathname === '/checkout'
@@ -30,6 +32,17 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
   }
 
   const sectionClass = (id) => (isHome && activeHomeSection === id ? 'nav-link--active' : undefined)
+
+  useEffect(() => {
+    if (totalItems > prevTotalItemsRef.current) {
+      setCartBump(true)
+      const timer = window.setTimeout(() => setCartBump(false), 320)
+      prevTotalItemsRef.current = totalItems
+      return () => window.clearTimeout(timer)
+    }
+    prevTotalItemsRef.current = totalItems
+    return undefined
+  }, [totalItems])
 
   return (
     <nav className={`nav ${scrolled ? 'nav--scrolled' : ''} ${hideOnHero ? 'nav--hero-hidden' : ''}`}>
@@ -81,6 +94,14 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
           Regional
         </a>
         <a
+          href={isHome ? '#crew' : '/'}
+          className={sectionClass('crew')}
+          aria-current={isHome && activeHomeSection === 'crew' ? 'true' : undefined}
+          onClick={(e) => { e.preventDefault(); scrollTo('crew'); }}
+        >
+          Crew
+        </a>
+        <a
           href={isHome ? '#gallery' : '/'}
           className={sectionClass('gallery')}
           aria-current={isHome && activeHomeSection === 'gallery' ? 'true' : undefined}
@@ -97,9 +118,9 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
           Shop
         </Link>
         <a href={`tel:${PHONE.replace(/\s/g, '')}`} className="nav-cta">Kontakt</a>
-        <button type="button" className="nav-cart-btn" onClick={() => { setMobileNavOpen(false); setCartOpen(true); }} aria-label="Warenkorb">
+        <button type="button" className={`nav-cart-btn ${cartBump ? 'nav-cart-btn--bump' : ''}`} onClick={() => { setMobileNavOpen(false); setCartOpen(true); }} aria-label="Warenkorb">
           <svg className="nav-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
-          {totalItems > 0 && <span className="nav-cart-badge">{totalItems}</span>}
+          {totalItems > 0 && <span className={`nav-cart-badge ${cartBump ? 'nav-cart-badge--bump' : ''}`}>{totalItems}</span>}
         </button>
         <Link to="/shop" className="btn-primary btn--small" onClick={() => setMobileNavOpen(false)}>
           Jetzt bestellen

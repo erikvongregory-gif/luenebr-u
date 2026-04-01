@@ -261,16 +261,41 @@ function HomePage() {
       </Reveal>
 
       <Reveal as="section" id="haendler" className="section section--regional" soft>
-        <div className="container regional-grid">
-          <Reveal delay={30}>
-            <span className="section-label">04 Regionalität</span>
-            <h2 className="section-title">Verwurzelt in der Stadt, präsent in der Region.</h2>
-          </Reveal>
-          <ul className="regional-list">
-            <Reveal as="li" delay={60}>Small-Batch-Braukultur aus Lüneburg</Reveal>
-            <Reveal as="li" delay={100}>Partnerschaften mit Handel und Gastronomie vor Ort</Reveal>
-            <Reveal as="li" delay={140}>Kurze Wege, frische Ware, persönlicher Kontakt</Reveal>
-          </ul>
+        <div className="container">
+          <div className="regional-grid">
+            <Reveal className="regional-intro" delay={30}>
+              <span className="section-label">04 Regionalität</span>
+              <h2 className="section-title">Verwurzelt in der Stadt, präsent in der Region.</h2>
+              <p className="regional-lead">
+                Du willst Lüne Bräu ausschenken oder vertreiben? Wir finden gemeinsam das richtige Konzept.
+              </p>
+              <a
+                href={`https://wa.me/4917625686466`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary regional-cta"
+              >
+                Händler werden
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M2 7h10M7 2l5 5-5 5" />
+                </svg>
+              </a>
+            </Reveal>
+
+            <div className="regional-network">
+              {[
+                { label: 'Gastronomie', text: 'Restaurants & Bars in Lüneburg' },
+                { label: 'Einzelhandel', text: 'Lokale Läden & Feinkost' },
+                { label: 'Events', text: 'Märkte & Stadtfeste' },
+                { label: 'Ausschank', text: 'Fassbier auf Anfrage' },
+              ].map((item, index) => (
+                <Reveal as="div" className="regional-tile" key={item.label} delay={70 + index * 70}>
+                  <span className="regional-tile-label">{item.label}</span>
+                  <span className="regional-tile-text">{item.text}</span>
+                </Reveal>
+              ))}
+            </div>
+          </div>
         </div>
       </Reveal>
 

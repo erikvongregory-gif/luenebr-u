@@ -8,7 +8,8 @@ export const products = [
     image: '/hansiat-photo.png',
     imageAlt: 'Hanseat',
     price: 4.50,
-    unit: '0,33l Flasche'
+    unit: '0,33l Flasche',
+    soldOut: true
   },
   {
     id: 'luna',
@@ -19,6 +20,7 @@ export const products = [
     image: '/luna-barrels.png',
     imageAlt: 'Luna Barrels',
     price: 5.50,
-    unit: '0,33l Flasche'
+    unit: '0,33l Flasche',
+    soldOut: false
   }
 ]

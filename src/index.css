@@ -433,6 +433,26 @@ a {
   justify-content: center;
 }
 
+.nav-cart-btn--bump {
+  animation: cartBtnBump 320ms ease;
+}
+
+.nav-cart-badge--bump {
+  animation: cartBadgePulse 320ms ease;
+}
+
+@keyframes cartBtnBump {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes cartBadgePulse {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
 .nav-burger {
   display: none;
   flex-direction: column;
@@ -2054,6 +2074,12 @@ a {
 
 .shop-card-btn {
   margin-top: 0.25rem;
+}
+
+.shop-card-btn--added {
+  background: var(--color-amber) !important;
+  border-color: var(--color-amber) !important;
+  color: var(--color-cream) !important;
 }
 
 .shop-footer {
@@ -4816,6 +4842,204 @@ body {
 
   .legal-page {
     padding-top: 5.6rem;
+  }
+}
+
+/* Regional-Block Layout */
+.section--regional .regional-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.2rem;
+  align-items: start;
+}
+
+.regional-intro .section-title {
+  text-align: left;
+}
+
+.regional-lead {
+  margin: 0.75rem 0 1.25rem;
+  color: var(--color-bark-light);
+  line-height: 1.7;
+}
+
+.regional-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.regional-network {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.regional-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(181, 114, 42, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.regional-tile-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-amber-dark);
+}
+
+.regional-tile-text {
+  color: var(--color-navy);
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .section--regional .regional-grid {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+
+  .regional-intro .section-title,
+  .regional-lead {
+    text-align: center;
+  }
+
+  .regional-network {
+    grid-template-columns: 1fr;
+  }
+
+  .regional-cta {
+    margin-inline: auto;
+  }
+}
+
+/* Section 04 — Regionalität (dunkel) */
+.section--regional {
+  background: #0e2340;
+  color: var(--color-cream);
+}
+
+.regional-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.regional-intro .section-label {
+  color: var(--color-amber-dark);
+}
+
+.regional-intro .section-title {
+  color: var(--color-cream);
+  text-align: left;
+  margin-bottom: 0.85rem;
+}
+
+.regional-lead {
+  font-size: 1rem;
+  color: rgba(240, 237, 230, 0.65);
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+  max-width: 380px;
+}
+
+.regional-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--color-amber);
+  color: var(--color-cream);
+  border-color: var(--color-amber);
+}
+
+.regional-cta:hover {
+  background: var(--color-amber-dark);
+  border-color: var(--color-amber-dark);
+  color: var(--color-cream);
+}
+
+/* Händler-Kacheln */
+.regional-network {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.regional-tile {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(181, 114, 42, 0.22);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.regional-tile:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(181, 114, 42, 0.4);
+}
+
+.regional-tile-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+
+.regional-tile-text {
+  font-size: 0.92rem;
+  color: rgba(240, 237, 230, 0.7);
+  line-height: 1.45;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .regional-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .regional-intro .section-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    text-align: center;
+  }
+
+  .regional-lead {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .regional-network {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .regional-intro .section-label,
+  .regional-intro {
+    text-align: center;
+  }
+
+  .regional-cta {
+    margin-inline: auto;
+  }
+
+  .regional-tile {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 400px) {
+  .regional-network {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { products } from '../data/products'
@@ -5,6 +6,16 @@ import { StorePaymentBadges } from '../components/ExpressCheckout'
 
 function ShopPage() {
   const { addItem } = useCart()
+  const [addedProductId, setAddedProductId] = useState(null)
+
+  const handleAddToCart = (product) => {
+    if (product.soldOut) return
+    addItem(product)
+    setAddedProductId(product.id)
+    window.setTimeout(() => {
+      setAddedProductId((current) => (current === product.id ? null : current))
+    }, 1400)
+  }
 
   return (
     <div className="shop shop--storefront">
@@ -50,10 +61,12 @@ function ShopPage() {
               <p className="shop-card-note">Lieferung in Deutschland · inkl. MwSt.</p>
               <button
                 type="button"
-                className="btn-primary shop-card-btn"
-                onClick={() => addItem(product)}
+                className={`btn-primary shop-card-btn ${addedProductId === product.id ? 'shop-card-btn--added' : ''}`}
+                onClick={() => handleAddToCart(product)}
+                disabled={product.soldOut}
+                aria-disabled={product.soldOut ? 'true' : undefined}
               >
-                In den Warenkorb
+                {product.soldOut ? 'Sold Out' : addedProductId === product.id ? 'Hinzugefuegt' : 'In den Warenkorb'}
               </button>
             </div>
           </article>
