@@ -80,6 +80,9 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-size: clamp(15px, 0.28vw + 14px, 17px);
 }
 
 body {
@@ -90,6 +93,14 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
 }
 
 a {
@@ -3158,7 +3169,7 @@ a {
   --color-surface: #1a1a1a;
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --section-padding: 150px;
+  --section-padding: clamp(64px, 9vw, 100px);
 }
 
 body {
@@ -3861,6 +3872,7 @@ body {
   border-radius: 18px;
   overflow: hidden;
   border: 1px solid rgba(212, 175, 55, 0.18);
+  transition: transform 320ms ease, box-shadow 320ms ease, border-color 320ms ease;
 }
 
 .bento-card--large {
@@ -3872,6 +3884,36 @@ body {
   height: 100%;
   object-fit: cover;
   filter: saturate(0.9) contrast(1.05);
+  transform: scale(1);
+  transition: transform 420ms ease, filter 320ms ease;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -140%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.28) 50%, transparent 100%);
+  transform: skewX(-18deg);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.bento-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+}
+
+.bento-card:hover img {
+  transform: scale(1.05);
+  filter: saturate(0.96) contrast(1.08);
+}
+
+.bento-card:hover::before {
+  animation: bentoBling 0.95s ease;
 }
 
 .bento-caption {
@@ -3883,6 +3925,14 @@ body {
   font-size: 0.75rem;
   background: color-mix(in srgb, #111 70%, transparent);
   color: var(--color-cream);
+  transition: transform 260ms ease, background 260ms ease, color 260ms ease;
+  z-index: 3;
+}
+
+.bento-card:hover .bento-caption {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, #111 55%, transparent);
+  color: #fff;
 }
 
 .btn-gastro {
@@ -4019,6 +4069,8 @@ body {
   margin: 0 auto 1rem;
   box-shadow: 0 12px 30px rgba(58, 42, 22, 0.16);
   border: 1px solid rgba(139, 69, 19, 0.14);
+  transform: scale(1);
+  transition: transform 420ms ease, filter 320ms ease;
 }
 
 .sweetie-feature {
@@ -4047,6 +4099,39 @@ body {
   color: var(--color-bark);
 }
 
+.crew-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 320ms ease, box-shadow 320ms ease;
+}
+
+.crew-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 38px rgba(58, 42, 22, 0.2);
+}
+
+.crew-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -140%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.24) 50%, transparent 100%);
+  transform: skewX(-18deg);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.crew-card:hover::before {
+  animation: crewBling 0.95s ease;
+}
+
+.crew-card:hover .crew-photo {
+  transform: scale(1.04);
+  filter: saturate(0.98) contrast(1.05);
+}
+
 .footer--luxury {
   background: transparent;
 }
@@ -4056,6 +4141,16 @@ body {
 }
 
 @keyframes bottleShine {
+  0% { left: -140%; }
+  100% { left: 145%; }
+}
+
+@keyframes bentoBling {
+  0% { left: -140%; }
+  100% { left: 145%; }
+}
+
+@keyframes crewBling {
   0% { left: -140%; }
   100% { left: 145%; }
 }
@@ -4515,7 +4610,7 @@ body {
 
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --section-padding: 150px;
+  --section-padding: clamp(64px, 9vw, 100px);
 }
 
 body {
@@ -5348,6 +5443,48 @@ body {
     text-align: center !important;
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+/* Hero: cleaner, ruhiger Reveal */
+.hero-content--luxury {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: heroContentCleanIn 480ms ease-out 120ms forwards;
+}
+
+.hero-content--luxury .hero-logo {
+  animation: none !important;
+  transform: none !important;
+  transition: opacity 220ms ease;
+}
+
+.hero-content--luxury .hero-logo:hover {
+  transform: none;
+  filter: brightness(0) invert(1);
+}
+
+.hero-content--luxury .hero-cta-row {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes heroContentCleanIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-content--luxury {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 }
 
