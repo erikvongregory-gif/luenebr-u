@@ -59,8 +59,8 @@
   --color-border-on-navy: color-mix(in srgb, var(--color-cream) 8%, transparent);
   --color-border-on-navy-strong: color-mix(in srgb, var(--color-cream) 10%, transparent);
 
-  --font-display: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
-  --font-body: 'Source Sans 3', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
 
   --shadow-soft: 0 14px 42px rgba(13, 20, 26, 0.09);
   --shadow-medium: 0 22px 60px rgba(13, 20, 26, 0.13);
@@ -915,6 +915,14 @@ a {
 
 .reveal--soft.reveal--visible {
   transform: none;
+}
+
+.reveal-media {
+  --reveal-shift: 12px;
+}
+
+.reveal-media img {
+  will-change: transform, opacity;
 }
 
 .shop-card.reveal--visible:hover {
@@ -2266,6 +2274,10 @@ a {
   transform: translateY(0);
 }
 
+.store-express__btn--selected {
+  box-shadow: 0 0 0 2px rgba(240, 180, 41, 0.9), 0 8px 18px rgba(10, 16, 28, 0.14);
+}
+
 .store-express__btn--apple {
   background: #000;
   color: #fff;
@@ -3078,8 +3090,8 @@ a {
   --color-text: #2f261c;
   --color-muted: #6f604e;
   --color-surface: #1a1a1a;
-  --font-display: 'IBM Plex Serif', 'Bodoni MT', Georgia, serif;
-  --font-body: 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --section-padding: 150px;
 }
 
@@ -3225,6 +3237,10 @@ body {
 }
 
 .nav-logo img {
+  filter: brightness(0) invert(1);
+}
+
+.nav--scrolled .nav-logo img {
   filter: brightness(0) invert(1);
 }
 
@@ -3541,6 +3557,77 @@ body {
 .story-card p {
   color: var(--color-muted);
   margin-bottom: 0.8rem;
+}
+
+/* Story Card — Hintergrund entfernen, sauber neben dem Foto */
+.story-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin-left: 0;
+  padding: 0.5rem 0 0.5rem 2rem;
+}
+
+/* Story Shell — etwas mehr Abstand zwischen Foto und Text */
+.story-shell {
+  gap: 3rem;
+  align-items: center;
+}
+
+/* Text auf hellem Hintergrund — Farben anpassen */
+.story-card .section-label {
+  color: var(--color-amber-dark);
+}
+
+.story-card .section-title {
+  color: var(--color-navy);
+}
+
+.story-quote {
+  border-color: var(--color-amber);
+}
+
+.story-quote p {
+  color: var(--color-navy);
+}
+
+.story-quote cite {
+  color: var(--color-amber-dark);
+}
+
+.story-stat {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(181, 114, 42, 0.22);
+}
+
+.story-stat-value {
+  color: var(--color-navy);
+}
+
+.story-stat-label {
+  color: var(--color-muted);
+}
+
+/* Story CTA auf hellem Hintergrund */
+.story-cta {
+  background: var(--color-navy);
+  color: var(--color-cream);
+  border-color: var(--color-navy);
+}
+
+.story-cta:hover {
+  background: var(--color-amber);
+  border-color: var(--color-amber);
+}
+
+/* Section Title in Story linksbündig */
+.section--story .section-title {
+  text-align: left;
+}
+
+.section--story .section-lead {
+  text-align: left;
+  margin-left: 0;
 }
 
 /* Story Badge */
@@ -3962,6 +4049,265 @@ body {
   }
 }
 
+/* Story Section — Layout 1: kein Kartenhintergrund */
+.section--story {
+  background: transparent;
+}
+
+.story-shell {
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.story-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin-left: 0;
+  padding: 0;
+}
+
+/* Texte auf hellem Hintergrund */
+.section--story .section-label {
+  color: var(--color-amber-dark);
+}
+
+.section--story .section-title {
+  color: var(--color-navy);
+  text-align: left;
+}
+
+.story-quote {
+  border-left: 2px solid var(--color-amber);
+}
+
+.story-quote p {
+  color: var(--color-navy);
+  opacity: 0.88;
+}
+
+.story-quote cite {
+  color: var(--color-amber-dark);
+}
+
+.story-card p {
+  color: var(--color-muted);
+}
+
+/* Stats auf hellem Hintergrund */
+.story-stat {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(181, 114, 42, 0.22);
+}
+
+.story-stat-value {
+  color: var(--color-navy);
+}
+
+.story-stat-label {
+  color: var(--color-muted);
+}
+
+/* CTA auf hellem Hintergrund */
+.story-cta {
+  background: var(--color-navy);
+  color: var(--color-cream);
+  border-color: var(--color-navy);
+}
+
+.story-cta:hover {
+  background: var(--color-amber);
+  border-color: var(--color-amber);
+  color: var(--color-cream);
+}
+
+/* Badge auf hellem Hintergrund */
+.story-badge {
+  color: var(--color-amber-dark);
+  border-color: rgba(181, 114, 42, 0.32);
+  background: rgba(181, 114, 42, 0.08);
+}
+
+/* Founder Card Caption */
+.story-founder-card {
+  position: absolute;
+  right: clamp(-1rem, -2vw, -0.4rem);
+  bottom: clamp(-1.2rem, -2.4vw, -0.5rem);
+  width: clamp(130px, 22vw, 180px);
+  background: rgba(14, 35, 64, 0.92);
+  border: 1px solid rgba(181, 114, 42, 0.35);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 0.35rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.story-founder-caption {
+  color: rgba(240, 237, 230, 0.6);
+  font-size: 0.7rem;
+  padding: 0.25rem 0.3rem 0.1rem;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .story-shell {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .story-card {
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .section--story .section-title {
+    text-align: left;
+  }
+
+  .story-founder-card {
+    position: static;
+    width: min(180px, 60vw);
+    margin: 0.75rem auto 0;
+  }
+}
+
+/* Final override: Story clean ohne Boxen */
+.section--story {
+  background: transparent !important;
+}
+
+.story-shell {
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.story-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin-left: 0 !important;
+  padding: 0 !important;
+}
+
+.story-card .section-label {
+  color: var(--color-amber-dark);
+  letter-spacing: 0.14em;
+}
+
+.story-card .section-title {
+  color: var(--color-navy);
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.story-card p {
+  color: var(--color-bark-light);
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  line-height: 1.72;
+}
+
+.story-quote {
+  border-left: 2px solid var(--color-amber);
+  padding: 0.5rem 0 0.5rem 1rem;
+  margin: 0.9rem 0 1rem;
+  background: transparent !important;
+}
+
+.story-quote p {
+  color: var(--color-navy);
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.story-quote cite {
+  color: var(--color-amber-dark);
+}
+
+.story-stats {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.story-stat {
+  background: transparent !important;
+  border: none !important;
+  padding: 0;
+  text-align: left;
+}
+
+.story-stat-value {
+  color: var(--color-navy);
+}
+
+.story-stat-label {
+  color: var(--color-muted);
+}
+
+@media (max-width: 900px) {
+  .story-shell {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .story-card {
+    padding: 0 !important;
+  }
+}
+
+/* Final typography fix: hoher Kontrast auf Story-Hintergrund */
+.story-card .section-label {
+  color: var(--color-amber);
+}
+
+.story-card .section-title {
+  color: var(--color-navy);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-shadow: none;
+}
+
+.story-card p {
+  color: var(--color-bark-light);
+  font-family: var(--font-body);
+}
+
+.story-quote p {
+  color: var(--color-navy);
+  opacity: 0.95;
+}
+
+.story-quote cite {
+  color: color-mix(in srgb, var(--color-amber) 88%, white 12%);
+}
+
+.story-stat-value {
+  color: var(--color-navy);
+}
+
+.story-stat-label {
+  color: var(--color-muted);
+}
+
+.story-cta {
+  background: color-mix(in srgb, var(--color-bark) 88%, transparent);
+  border-color: color-mix(in srgb, var(--color-amber) 34%, transparent);
+  color: var(--color-cream);
+}
+
+.story-cta:hover {
+  background: var(--color-amber);
+  border-color: var(--color-amber);
+  color: var(--color-text);
+}
+
 /* Mobile: Story-Shell sauber stapeln */
 @media (max-width: 900px) {
   .story-shell {
@@ -4025,8 +4371,8 @@ body {
   --color-btn-primary-bg: #0e2340;
   --color-btn-primary-hover: #152d50;
 
-  --font-display: 'IBM Plex Serif', 'Bodoni MT', Georgia, serif;
-  --font-body: 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --section-padding: 150px;
 }
 
@@ -4169,17 +4515,33 @@ body {
     inset: 0;
     width: 100%;
     background: linear-gradient(180deg, #0a1c35 0%, #0e2340 100%);
-    padding: 5.6rem 1.2rem 1.4rem;
+    padding: 5.8rem 1rem 1.25rem;
     gap: 0.8rem;
     z-index: 120;
     overflow-y: auto;
   }
 
   .nav-links a {
-    border-bottom: 1px solid rgba(181, 114, 42, 0.18);
-    font-size: 0.96rem;
+    border: 1px solid rgba(181, 114, 42, 0.24);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    line-height: 1.25;
     color: var(--color-cream) !important;
-    padding: 0.9rem 0;
+    padding: 0.82rem 0.9rem;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .nav-links a:hover {
+    background: rgba(181, 114, 42, 0.16);
+    border-color: rgba(181, 114, 42, 0.48);
+  }
+
+  .nav-links a.nav-link--active {
+    color: #ffe6c3 !important;
+    background: rgba(181, 114, 42, 0.2);
+    border-color: rgba(181, 114, 42, 0.62);
   }
 
   .nav-burger span,
@@ -4188,13 +4550,22 @@ body {
   }
 
   .nav-links .nav-cart-btn {
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 48px;
+    padding: 0.75rem 0.9rem;
     color: var(--color-cream) !important;
-    border-bottom: 1px solid rgba(181, 114, 42, 0.18);
+    border: 1px solid rgba(181, 114, 42, 0.24);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
   }
 
   .nav-links .btn-primary {
     width: 100%;
-    margin-top: 0.35rem;
+    margin-top: 0.25rem;
+    min-height: 46px;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
   }
 }
 
@@ -4306,7 +4677,28 @@ body {
   color: #0e2340;
 }
 
+/* Hotfix: Handwerk & Herkunft Schrift dunkel erzwingen */
+#ueber-mich .story-card .section-title,
+#ueber-mich .story-card p,
+#ueber-mich .story-quote p,
+#ueber-mich .story-quote cite,
+#ueber-mich .story-stat-value,
+#ueber-mich .story-stat-label {
+  color: #0e2340 !important;
+}
+
 /* Headline-Style im Hero */
 .hero-headline {
   color: var(--color-cream);
+}
+
+/* Nav im Hero ausblenden */
+.nav {
+  transition: background var(--transition), box-shadow var(--transition), border-color var(--transition), transform 260ms ease, opacity 260ms ease;
+}
+
+.nav--hero-hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+  pointer-events: none;
 }

@@ -9,13 +9,14 @@ import { CartProvider, useCart } from './context/CartContext'
 
 const PHONE = '+49 176 25686466'
 
-const HOME_SECTION_IDS = ['hero', 'ueber-mich', 'biere', 'fassbier', 'haendler', 'gallery']
+const HOME_SECTION_IDS = ['hero', 'biere', 'ueber-mich', 'fassbier', 'haendler', 'gallery']
 
 function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen, activeHomeSection }) {
   const { totalItems } = useCart()
   const location = useLocation()
   const isHome = location.pathname === '/'
   const shopRouteActive = location.pathname === '/shop' || location.pathname === '/checkout'
+  const hideOnHero = isHome && activeHomeSection === 'hero' && !mobileNavOpen
 
   const scrollTo = (id) => {
     setMobileNavOpen(false)
@@ -29,7 +30,7 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
   const sectionClass = (id) => (isHome && activeHomeSection === id ? 'nav-link--active' : undefined)
 
   return (
-    <nav className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
+    <nav className={`nav ${scrolled ? 'nav--scrolled' : ''} ${hideOnHero ? 'nav--hero-hidden' : ''}`}>
       <Link to="/" className="nav-logo" onClick={() => setMobileNavOpen(false)}>
         <img src={logoSrc} alt="Lüne Bräu" />
       </Link>
@@ -46,20 +47,20 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
           Start
         </a>
         <a
-          href={isHome ? '#ueber-mich' : '/'}
-          className={sectionClass('ueber-mich')}
-          aria-current={isHome && activeHomeSection === 'ueber-mich' ? 'true' : undefined}
-          onClick={(e) => { e.preventDefault(); scrollTo('ueber-mich'); }}
-        >
-          Story
-        </a>
-        <a
           href={isHome ? '#biere' : '/'}
           className={sectionClass('biere')}
           aria-current={isHome && activeHomeSection === 'biere' ? 'true' : undefined}
           onClick={(e) => { e.preventDefault(); scrollTo('biere'); }}
         >
           Biere
+        </a>
+        <a
+          href={isHome ? '#ueber-mich' : '/'}
+          className={sectionClass('ueber-mich')}
+          aria-current={isHome && activeHomeSection === 'ueber-mich' ? 'true' : undefined}
+          onClick={(e) => { e.preventDefault(); scrollTo('ueber-mich'); }}
+        >
+          Story
         </a>
         <a
           href={isHome ? '#fassbier' : '/'}

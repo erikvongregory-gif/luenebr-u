@@ -1,17 +1,31 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { FORMSPREE_FORM_ID } from '../config'
 import ExpressCheckout, { StorePaymentBadges } from '../components/ExpressCheckout'
 import Reveal from '../components/Reveal'
+import { startExpressCheckout } from '../lib/expressCheckout'
 
 const MIN_ORDER = 25
+const EXPRESS_LABELS = {
+  apple: 'Apple Pay',
+  google: 'Google Pay',
+  paypal: 'PayPal'
+}
+
+function sanitizeProvider(value) {
+  return Object.prototype.hasOwnProperty.call(EXPRESS_LABELS, value) ? value : null
+}
 
 function CheckoutPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const { items, totalPrice, totalItems, clearCart } = useCart()
   const [status, setStatus] = useState('idle')
   const [expressHint, setExpressHint] = useState(false)
+  const [expressError, setExpressError] = useState('')
+  const [selectedExpress, setSelectedExpress] = useState(() => sanitizeProvider(searchParams.get('pay')))
   const formRef = useRef(null)
+  const paymentHandledRef = useRef(false)
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -28,12 +42,84 @@ function CheckoutPage() {
     }
   }, [expressHint])
 
+  useEffect(() => {
+    const providerFromQuery = sanitizeProvider(searchParams.get('pay'))
+    if (!providerFromQuery) return
+    setSelectedExpress(providerFromQuery)
+    setExpressHint(true)
+  }, [searchParams])
+
+  useEffect(() => {
+    if (paymentHandledRef.current) return
+
+    const paidState = searchParams.get('paid')
+    const provider = searchParams.get('provider')
+    const paypalOrderId = searchParams.get('token')
+    const stripeSessionId = searchParams.get('session_id')
+
+    if (paidState === 'success' && provider === 'stripe' && stripeSessionId) {
+      paymentHandledRef.current = true
+      const verifyStripe = async () => {
+        try {
+          const res = await fetch(`/api/verify-stripe-session?session_id=${encodeURIComponent(stripeSessionId)}`)
+          const data = await res.json()
+          if (!res.ok || !data.paid) throw new Error('Stripe-Zahlung nicht bestätigt')
+          clearCart()
+          setStatus('success')
+        } catch {
+          setStatus('error')
+          setExpressError('Stripe-Zahlung konnte nicht verifiziert werden. Bitte kontaktiere uns.')
+        }
+      }
+      verifyStripe()
+      return
+    }
+
+    if (paidState === 'success' && provider === 'paypal' && paypalOrderId) {
+      paymentHandledRef.current = true
+      const capture = async () => {
+        try {
+          const res = await fetch('/api/capture-paypal-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: paypalOrderId })
+          })
+          if (!res.ok) throw new Error('Capture fehlgeschlagen')
+          clearCart()
+          setStatus('success')
+        } catch {
+          setStatus('error')
+        }
+      }
+      capture()
+      return
+    }
+
+    if (paidState === 'cancelled') {
+      paymentHandledRef.current = true
+      setExpressHint(true)
+      setExpressError('Zahlung wurde abgebrochen. Du kannst es erneut versuchen.')
+    }
+  }, [clearCart, searchParams])
+
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleExpressSelect = () => {
+  const handleExpressSelect = async (provider) => {
+    const nextProvider = sanitizeProvider(provider)
+    if (!nextProvider) return
+
+    setSelectedExpress(nextProvider)
+    setSearchParams({ pay: nextProvider }, { replace: true })
     setExpressHint(true)
+    setExpressError('')
+
+    try {
+      await startExpressCheckout(nextProvider, items)
+    } catch (error) {
+      setExpressError(error?.message || 'Zahlung konnte nicht gestartet werden.')
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -60,7 +146,8 @@ function CheckoutPage() {
       _subject: `Bestellung Lüne Bräu – ${form.name}`,
       order: orderText,
       gesamt: `${totalPrice.toFixed(2)} €`,
-      anzahl: totalItems
+      anzahl: totalItems,
+      zahlungsart: selectedExpress ? EXPRESS_LABELS[selectedExpress] : 'Noch nicht ausgewählt'
     }
 
     try {
@@ -129,11 +216,12 @@ function CheckoutPage() {
           </Reveal>
 
           <Reveal className="checkout-main" soft delay={70}>
-            <ExpressCheckout showDivider onSelect={handleExpressSelect} />
+            <ExpressCheckout showDivider onSelect={handleExpressSelect} selected={selectedExpress} />
 
             {expressHint && (
               <div className="checkout-express-hint" role="status">
-                Bitte fülle das Formular aus und sende die Bestellung ab. Den sicheren Zahlungslink (Apple Pay, Google Pay, PayPal und mehr) erhältst du von uns per E-Mail.
+                Gewählt: <strong>{selectedExpress ? EXPRESS_LABELS[selectedExpress] : 'Express-Zahlung'}</strong>.
+                {expressError ? ` ${expressError}` : ' Du wirst zur sicheren Bezahlseite weitergeleitet.'}
               </div>
             )}
 
@@ -179,7 +267,7 @@ function CheckoutPage() {
               <Reveal as="section" className="checkout-section checkout-section--store checkout-section--payment" delay={110}>
                 <h2>Zahlung</h2>
                 <p className="checkout-payment-intro">
-                  Nach dem Absenden prüfen wir deine Bestellung und senden dir einen Zahlungslink – kompatibel mit Apple Pay, Google Pay und PayPal, sowie klassischer Banküberweisung.
+                  Express-Zahlung startet direkt per Weiterleitung: Apple Pay und Google Pay via Stripe, PayPal über den PayPal-Checkout.
                 </p>
                 <div className="checkout-payment-icons" aria-hidden>
                   <span className="checkout-pay-pill">Apple Pay</span>
@@ -238,7 +326,7 @@ function CheckoutPage() {
               <StorePaymentBadges className="checkout-summary-badges" />
               <p className="checkout-info">
                 Du kannst mit <strong>PayPal</strong>, <strong>Apple Pay</strong>, <strong>Google Pay</strong>, Karte oder Überweisung bezahlen.
-                Den passenden Link schicken wir dir nach Prüfung der Bestellung per E-Mail.
+                Für Express-Zahlung wirst du direkt zur sicheren Bezahlseite weitergeleitet.
               </p>
             </div>
           </Reveal>

@@ -30,22 +30,41 @@ function PayPalWordmark() {
  * Express-Zahlungsbuttons im Stil gängiger Shop-Systeme.
  * Hinweis: Es erfolgt keine echte Wallet-Zahlung – nach Bestellung folgt der Link per E-Mail.
  */
-export default function ExpressCheckout({ className = '', showDivider = true, onSelect }) {
+export default function ExpressCheckout({ className = '', showDivider = true, onSelect, selected = null }) {
   const wrap = (provider) => () => onSelect?.(provider)
+  const selectedIs = (provider) => selected === provider
 
   return (
     <div className={`store-express ${className}`.trim()}>
       <p className="store-express__eyebrow">Express-Kasse</p>
       <div className="store-express__buttons" role="group" aria-label="Schnellkasse">
-        <button type="button" className="store-express__btn store-express__btn--apple" onClick={wrap('apple')} aria-label="Apple Pay">
+        <button
+          type="button"
+          className={`store-express__btn store-express__btn--apple ${selectedIs('apple') ? 'store-express__btn--selected' : ''}`.trim()}
+          onClick={wrap('apple')}
+          aria-label="Apple Pay"
+          aria-pressed={selectedIs('apple')}
+        >
           <IconApple />
           <span className="store-express__apple-pay">Pay</span>
         </button>
-        <button type="button" className="store-express__btn store-express__btn--google" onClick={wrap('google')} aria-label="Google Pay">
+        <button
+          type="button"
+          className={`store-express__btn store-express__btn--google ${selectedIs('google') ? 'store-express__btn--selected' : ''}`.trim()}
+          onClick={wrap('google')}
+          aria-label="Google Pay"
+          aria-pressed={selectedIs('google')}
+        >
           <IconGoogleG />
           <span>Pay</span>
         </button>
-        <button type="button" className="store-express__btn store-express__btn--paypal" onClick={wrap('paypal')} aria-label="PayPal">
+        <button
+          type="button"
+          className={`store-express__btn store-express__btn--paypal ${selectedIs('paypal') ? 'store-express__btn--selected' : ''}`.trim()}
+          onClick={wrap('paypal')}
+          aria-label="PayPal"
+          aria-pressed={selectedIs('paypal')}
+        >
           <PayPalWordmark />
         </button>
       </div>

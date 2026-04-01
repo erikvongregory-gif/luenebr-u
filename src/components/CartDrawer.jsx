@@ -1,14 +1,24 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import ExpressCheckout from './ExpressCheckout'
+import { startExpressCheckout } from '../lib/expressCheckout'
 
 function CartDrawer({ isOpen, onClose }) {
   const navigate = useNavigate()
   const { items, updateQuantity, removeItem, totalPrice, totalItems } = useCart()
 
-  const goCheckout = () => {
+  const goCheckout = async (provider) => {
     onClose()
-    navigate('/checkout')
+    if (provider) {
+      try {
+        await startExpressCheckout(provider, items)
+        return
+      } catch {
+        // Fallback auf lokale Checkout-Seite, falls der Payment-Start fehlschlägt.
+      }
+    }
+    const search = provider ? `?pay=${provider}` : ''
+    navigate(`/checkout${search}`)
   }
 
   if (!isOpen) return null

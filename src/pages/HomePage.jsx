@@ -16,22 +16,23 @@ const INSTAGRAM_PREVIEWS = [
 
 const BEERS = [
   {
-    name: 'Hanseat Helles',
+    name: 'Hanseat',
     subtitle: 'Mild. Klar. Norddeutsch.',
-    image: '/hanseat.svg',
+    image: '/hanseat-photo.png',
     imageClass: 'product-bottle--hanseat',
-    imageAlt: 'Lüne Bräu Hanseat Helles Flasche',
+    imageAlt: 'Lüne Bräu Hanseat Flasche',
     bitterness: '18 IBU',
     alcohol: '5,6% vol.',
     color: 'EBC 7',
-    price: '2,80 €',
+    price: '2,48 €',
     priceUnit: '/ 0,33 l Flasche',
-    badge: null,
+    badge: 'Sold Out',
+    soldOut: true,
   },
   {
     name: 'Luna Barrels',
     subtitle: 'Holzfassgereift mit Tiefe',
-    image: '/luna-barrels-photo.png',
+    image: '/luna-barrels.png',
     imageClass: 'product-bottle--luna',
     imageAlt: 'Lüne Bräu Luna Barrels Flasche',
     bitterness: '20 IBU',
@@ -40,6 +41,7 @@ const BEERS = [
     price: '4,50 €',
     priceUnit: '/ 0,33 l Flasche',
     badge: 'Special Edition',
+    soldOut: false,
   },
 ]
 
@@ -145,9 +147,15 @@ function HomePage() {
                       {beer.price} <span className="product-price-unit">{beer.priceUnit}</span>
                     </p>
                   )}
-                  <Link to="/shop" className="btn-primary product-card-cta">
-                    {CART_ICON} In den Warenkorb
-                  </Link>
+                  {beer.soldOut ? (
+                    <button type="button" className="btn-primary product-card-cta" disabled aria-disabled="true">
+                      Sold Out
+                    </button>
+                  ) : (
+                    <Link to="/shop" className="btn-primary product-card-cta">
+                      {CART_ICON} In den Warenkorb
+                    </Link>
+                  )}
                 </div>
               </Reveal>
             ))}
@@ -158,22 +166,14 @@ function HomePage() {
       <Reveal as="section" id="ueber-mich" className="section section--story" soft>
         <div className="container story-shell">
           <div className="story-media">
-            <img
-              src="/finn-traum.png"
-              alt="Braukessel und Handwerk bei Lüne Bräu"
-              loading="lazy"
-              decoding="async"
-            />
-            <figure className="story-founder-card">
+            <Reveal className="reveal-media" delay={40}>
               <img
-                src="/ausschank.png"
-                alt="Gründer von Lüne Bräu beim Zapfen"
-                className="story-founder-image"
+                src="/finn-traum.png"
+                alt="Braukessel und Handwerk bei Lüne Bräu"
                 loading="lazy"
                 decoding="async"
               />
-              <figcaption className="story-founder-caption">Finn beim Zapfen</figcaption>
-            </figure>
+            </Reveal>
           </div>
 
           <Reveal className="story-card" delay={80}>
@@ -240,15 +240,15 @@ function HomePage() {
           <h2 className="section-title">Lüneburg erleben. Ausschank mit Atmosphäre.</h2>
           <div className="bento-grid">
             <Reveal className="bento-card bento-card--large" delay={30}>
-              <img src="/zapfen.svg" alt="Inhaber von Lüne Bräu beim Zapfen am Durchlaufkühler" loading="lazy" decoding="async" />
+              <img src="/ausschankkultur-charakter.png" alt="Inhaber von Lüne Bräu beim Zapfen am Durchlaufkühler" loading="lazy" decoding="async" />
               <div className="bento-caption">Ausschankkultur mit Charakter</div>
             </Reveal>
             <Reveal className="bento-card" delay={90}>
-              <img src="/hanseat-seitlich.svg" alt="Bier und Food Pairing" loading="lazy" decoding="async" />
+              <img src="/geselligkeit-food-pairing.png" alt="Bier und Food Pairing" loading="lazy" decoding="async" />
               <div className="bento-caption">Geselligkeit und Food Pairing</div>
             </Reveal>
             <Reveal className="bento-card" delay={130}>
-              <img src="/hanseat.svg" alt="Ambiente in Lüneburg" loading="lazy" decoding="async" />
+              <img src="/altstadtflair-craft-vibe.png" alt="Ambiente in Lüneburg" loading="lazy" decoding="async" />
               <div className="bento-caption">Altstadtflair trifft Craft-Vibe</div>
             </Reveal>
           </div>
@@ -260,14 +260,14 @@ function HomePage() {
 
       <Reveal as="section" id="haendler" className="section section--regional" soft>
         <div className="container regional-grid">
-          <div>
+          <Reveal delay={30}>
             <span className="section-label">04 Regionalität</span>
             <h2 className="section-title">Verwurzelt in der Stadt, präsent in der Region.</h2>
-          </div>
+          </Reveal>
           <ul className="regional-list">
-            <li>Small-Batch-Braukultur aus Lüneburg</li>
-            <li>Partnerschaften mit Handel und Gastronomie vor Ort</li>
-            <li>Kurze Wege, frische Ware, persönlicher Kontakt</li>
+            <Reveal as="li" delay={60}>Small-Batch-Braukultur aus Lüneburg</Reveal>
+            <Reveal as="li" delay={100}>Partnerschaften mit Handel und Gastronomie vor Ort</Reveal>
+            <Reveal as="li" delay={140}>Kurze Wege, frische Ware, persönlicher Kontakt</Reveal>
           </ul>
         </div>
       </Reveal>
@@ -288,6 +288,17 @@ function HomePage() {
               <h4>Bierzapferin, Kalligraphie-Expertin & Biermodel</h4>
               <p>Seit 2023 im Team</p>
             </Reveal>
+            <Reveal className="crew-card" delay={90}>
+              <img
+                src="/crew-barchefin-bike.png"
+                alt="Barchefin und Biermodel mit Lüne Bräu Lastenrad"
+                className="crew-photo"
+                loading="lazy"
+                decoding="async"
+              />
+              <h4>Barchefin & Biermodel</h4>
+              <p>Seit 2022 im Team</p>
+            </Reveal>
           </div>
         </div>
       </Reveal>
@@ -297,13 +308,15 @@ function HomePage() {
           <span className="section-label">06 Partnerschaft</span>
           <h2 className="section-title">Sweetie & Helen - Powered by Lüne Bräu</h2>
           <div className="sweetie-feature">
-            <img
-              src="/sweetie-helen.png"
-              alt="Dressurreiterin Helen Kretzschmar mit ihrer Stute Sweet Caramel H"
-              className="sweetie-photo"
-              loading="lazy"
-              decoding="async"
-            />
+            <Reveal className="reveal-media" delay={40}>
+              <img
+                src="/sweetie-helen.png"
+                alt="Dressurreiterin Helen Kretzschmar mit ihrer Stute Sweet Caramel H"
+                className="sweetie-photo"
+                loading="lazy"
+                decoding="async"
+              />
+            </Reveal>
             <div className="sweetie-content">
               <p className="sweetie-intro">Unsere Unterstützung für Dressurreiterin Helen Kretzschmar</p>
               <p>
@@ -339,7 +352,8 @@ function HomePage() {
           </a>
           <div className="instagram-preview-grid" role="list">
             {INSTAGRAM_PREVIEWS.map((image, index) => (
-              <a
+              <Reveal
+                as="a"
                 key={image.src}
                 href={INSTAGRAM_URL}
                 target="_blank"
@@ -347,9 +361,10 @@ function HomePage() {
                 className={`instagram-preview-card ${index === 0 ? 'instagram-preview-card--wide' : ''}`}
                 role="listitem"
                 aria-label="Instagram Vorschau öffnen"
+                delay={index * 70}
               >
                 <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
-              </a>
+              </Reveal>
             ))}
           </div>
         </div>
