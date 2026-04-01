@@ -47,9 +47,9 @@ const BEERS = [
 
 const ICONS = {
   bitterness: (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
-      <ellipse cx="8" cy="9" rx="3" ry="4.5" />
-      <path d="M8 4.5C8 3 9 2 10 1.5M8 4.5C8 3 7 2 6 1.5" />
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M8 2.2c2.8 1.6 4.3 4 4.3 6.4 0 2.9-1.9 5.2-4.3 5.2S3.7 11.5 3.7 8.6c0-2.4 1.5-4.8 4.3-6.4z" />
+      <path d="M6 6.1h4M5.6 8.2h4.8M6 10.3h4" />
     </svg>
   ),
   alcohol: (
@@ -58,9 +58,11 @@ const ICONS = {
     </svg>
   ),
   color: (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
-      <circle cx="8" cy="8" r="5.5" />
-      <path d="M8 4v4l2.5 2" />
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="2.4" y="3" width="11.2" height="10" rx="1.7" />
+      <rect x="4.1" y="4.8" width="2.1" height="6.4" fill="currentColor" fillOpacity="0.2" stroke="none" />
+      <rect x="6.95" y="4.8" width="2.1" height="6.4" fill="currentColor" fillOpacity="0.45" stroke="none" />
+      <rect x="9.8" y="4.8" width="2.1" height="6.4" fill="currentColor" fillOpacity="0.8" stroke="none" />
     </svg>
   ),
 }
