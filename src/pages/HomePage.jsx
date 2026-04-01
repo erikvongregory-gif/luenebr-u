@@ -216,7 +216,7 @@ function HomePage() {
               </div>
               <div className="story-stat">
                 <span className="story-stat-value">100%</span>
-                <span className="story-stat-label">Regional</span>
+                <span className="story-stat-label">Original</span>
               </div>
             </div>
 

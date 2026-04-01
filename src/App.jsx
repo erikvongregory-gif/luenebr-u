@@ -190,6 +190,19 @@ function App() {
     }
   }, [location.pathname])
 
+  useEffect(() => {
+    // Stabilisiert Mobile-Menü beim Seitenwechsel (z.B. Shop <-> Home)
+    setMobileNavOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    // Verhindert Scroll-/Layout-Glitches, solange das Mobile-Menü offen ist
+    document.body.style.overflow = mobileNavOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileNavOpen])
+
   const verifyAge = () => {
     localStorage.setItem('luenebraeu-age', 'verified-16')
     setAgeVerified(true)
