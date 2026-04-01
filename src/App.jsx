@@ -48,8 +48,12 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
       <Link to="/" className="nav-logo" onClick={() => setMobileNavOpen(false)}>
         <img src={logoSrc} alt="Lüne Bräu" />
       </Link>
-      <button className="nav-burger" onClick={() => setMobileNavOpen(!mobileNavOpen)} aria-label="Menü">
-        <span /><span /><span />
+      <button
+        className={`nav-burger ${mobileNavOpen ? 'nav-burger--open' : ''}`}
+        onClick={() => setMobileNavOpen(!mobileNavOpen)}
+        aria-label={mobileNavOpen ? 'Menü schließen' : 'Menü öffnen'}
+      >
+        {mobileNavOpen ? <span className="nav-burger-close" aria-hidden>×</span> : <><span /><span /><span /></>}
       </button>
       <div className={`nav-links ${mobileNavOpen ? 'nav-links--open' : ''}`}>
         <a
