@@ -20,7 +20,6 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
   const location = useLocation()
   const isHome = location.pathname === '/'
   const shopRouteActive = location.pathname === '/shop' || location.pathname === '/checkout'
-  const hideOnHero = isHome && activeHomeSection === 'hero' && !mobileNavOpen
 
   const scrollTo = (id) => {
     setMobileNavOpen(false)
@@ -45,7 +44,7 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
   }, [totalItems])
 
   return (
-    <nav className={`nav ${scrolled ? 'nav--scrolled' : ''} ${hideOnHero ? 'nav--hero-hidden' : ''}`}>
+    <nav className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
       <Link to="/" className="nav-logo" onClick={() => setMobileNavOpen(false)}>
         <img src={logoSrc} alt="Lüne Bräu" />
       </Link>
