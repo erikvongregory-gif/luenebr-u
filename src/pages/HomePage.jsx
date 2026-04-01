@@ -24,23 +24,55 @@ const BEERS = [
     bitterness: '18 IBU',
     alcohol: '5,6% vol.',
     color: 'EBC 7',
+    price: '2,80 €',
+    priceUnit: '/ 0,33 l Flasche',
+    badge: null,
   },
   {
     name: 'Luna Barrels',
     subtitle: 'Holzfassgereift mit Tiefe',
-    image: '/luna-barrels.svg',
+    image: '/luna-barrels-photo.png',
     imageClass: 'product-bottle--luna',
     imageAlt: 'Lüne Bräu Luna Barrels Flasche',
     bitterness: '20 IBU',
     alcohol: '7,1% vol.',
     color: 'EBC 55',
+    price: '4,50 €',
+    priceUnit: '/ 0,33 l Flasche',
+    badge: 'Special Edition',
   },
 ]
 
-function ProductMeta({ icon, label, value }) {
+const ICONS = {
+  bitterness: (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+      <ellipse cx="8" cy="9" rx="3" ry="4.5" />
+      <path d="M8 4.5C8 3 9 2 10 1.5M8 4.5C8 3 7 2 6 1.5" />
+    </svg>
+  ),
+  alcohol: (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M8 2 C8 2 4 7 4 10 a4 4 0 0 0 8 0 C12 7 8 2 8 2z" />
+    </svg>
+  ),
+  color: (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+      <circle cx="8" cy="8" r="5.5" />
+      <path d="M8 4v4l2.5 2" />
+    </svg>
+  ),
+}
+
+const CART_ICON = (
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M3 2h1.5L6 9h7l1.5-5H5.5M6 12.5a1 1 0 1 0 2 0 1 1 0 0 0-2 0M11 12.5a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
+  </svg>
+)
+
+function ProductMeta({ type, label, value }) {
   return (
     <span className="product-meta-item" aria-label={`${label}: ${value}`}>
-      <span className="product-meta-icon" aria-hidden>{icon}</span>
+      <span className="product-meta-icon" aria-hidden>{ICONS[type]}</span>
       <span className="product-meta-value">{value}</span>
     </span>
   )
@@ -87,6 +119,9 @@ function HomePage() {
           <div className="product-showcase-grid" role="list">
             {BEERS.map((beer, index) => (
               <Reveal as="article" className="product-card" key={beer.name} delay={index * 90} role="listitem">
+                {beer.badge && (
+                  <span className="product-card-badge">{beer.badge}</span>
+                )}
                 <div className="product-bottle-wrap">
                   <img
                     src={beer.image}
@@ -101,11 +136,18 @@ function HomePage() {
                   <p className="product-subtitle">{beer.subtitle}</p>
                   <h3 className="product-title">{beer.name}</h3>
                   <div className="product-meta-row">
-                    <ProductMeta icon="I" label="Bitterkeit" value={beer.bitterness} />
-                    <ProductMeta icon="A" label="Alkohol" value={beer.alcohol} />
-                    <ProductMeta icon="F" label="Farbe" value={beer.color} />
+                    <ProductMeta type="bitterness" label="Bitterkeit" value={beer.bitterness} />
+                    <ProductMeta type="alcohol" label="Alkohol" value={beer.alcohol} />
+                    <ProductMeta type="color" label="Farbe" value={beer.color} />
                   </div>
-                  <Link to="/shop" className="btn-primary">Jetzt entdecken</Link>
+                  {beer.price && (
+                    <p className="product-price">
+                      {beer.price} <span className="product-price-unit">{beer.priceUnit}</span>
+                    </p>
+                  )}
+                  <Link to="/shop" className="btn-primary product-card-cta">
+                    {CART_ICON} In den Warenkorb
+                  </Link>
                 </div>
               </Reveal>
             ))}
@@ -130,19 +172,64 @@ function HomePage() {
                 loading="lazy"
                 decoding="async"
               />
+              <figcaption className="story-founder-caption">Finn beim Zapfen</figcaption>
             </figure>
           </div>
+
           <Reveal className="story-card" delay={80}>
             <span className="section-label">02 Handwerk & Herkunft</span>
-            <h2 className="section-title">Regional. Präzise. Mit Haltung gebraut.</h2>
+            <span className="story-badge">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+                <circle cx="6" cy="6" r="4.5" />
+                <path d="M6 3.5v2.5l1.5 1" />
+              </svg>
+              Seit 2017
+            </span>
+            <h2 className="section-title">Regional. Präzise.<br />Mit Haltung gebraut.</h2>
+
+            <blockquote className="story-quote">
+              <p>
+                Wir brauen kein Bier für den Massenmarkt. Wir brauen für die Menschen
+                in Lüneburg - und für alle, die wissen, was Qualität bedeutet.
+              </p>
+              <cite>- Lüne Bräu Crew</cite>
+            </blockquote>
+
             <p>
-              Lüne Bräu steht für saubere Rezepturen, ehrliche Rohstoffe und einen Geschmack, der in Lüneburg verwurzelt ist.
-              Jede Charge verbindet traditionelles Brauhandwerk mit dem Anspruch moderner Craft-Kultur.
+              Lüne Bräu steht für saubere Rezepturen, ehrliche Rohstoffe und einen
+              Geschmack, der in Lüneburg verwurzelt ist. Jede Charge verbindet
+              traditionelles Brauhandwerk mit dem Anspruch moderner Craft-Kultur.
             </p>
             <p>
-              Vom ersten Sud bis zur finalen Abfüllung bleibt alles in einer Hand: bewusst klein, kompromisslos in der Qualität
-              und gemacht für Menschen, die Charakter im Glas suchen.
+              Vom ersten Sud bis zur finalen Abfüllung bleibt alles in einer Hand:
+              bewusst klein, kompromisslos in der Qualität.
             </p>
+
+            <div className="story-stats">
+              <div className="story-stat">
+                <span className="story-stat-value">2017</span>
+                <span className="story-stat-label">Gegründet</span>
+              </div>
+              <div className="story-stat">
+                <span className="story-stat-value">2</span>
+                <span className="story-stat-label">Sorten</span>
+              </div>
+              <div className="story-stat">
+                <span className="story-stat-value">100%</span>
+                <span className="story-stat-label">Regional</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="btn-primary story-cta"
+              onClick={() => document.getElementById('biere')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M2 7h10M7 2l5 5-5 5" />
+              </svg>
+              Unsere Biere entdecken
+            </button>
           </Reveal>
         </div>
       </Reveal>
