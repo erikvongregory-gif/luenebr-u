@@ -1700,6 +1700,14 @@ a {
   color: var(--color-bark);
 }
 
+/* Section 06 — Sweetie CTA */
+.sweetie-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
 .section--sweetie .section-subtitle {
   font-size: 1rem;
 }
@@ -5308,5 +5316,51 @@ body {
     text-align: center !important;
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+/* Sweetie Desktop Feinschliff */
+@media (min-width: 1001px) {
+  .section--sweetie .container {
+    max-width: 1180px;
+  }
+
+  .sweetie-feature {
+    grid-template-columns: minmax(300px, 440px) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  .sweetie-content {
+    max-width: 620px;
+  }
+
+  .sweetie-content .section-label {
+    margin-bottom: 0.35rem;
+  }
+
+  .sweetie-content .section-title {
+    text-align: left;
+    margin-bottom: 1rem;
+    line-height: 1.18;
+  }
+
+  .sweetie-intro {
+    font-size: 1.08rem;
+    line-height: 1.7;
+    margin-bottom: 0.9rem;
+  }
+
+  .sweetie-content p {
+    max-width: 58ch;
+  }
+
+  .sweetie-tagline {
+    margin-top: 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .sweetie-cta {
+    margin-top: 0.9rem;
   }
 }

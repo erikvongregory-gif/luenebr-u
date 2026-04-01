@@ -332,8 +332,6 @@ function HomePage() {
 
       <Reveal as="section" id="sweetie" className="section section--sweetie" soft>
         <div className="container">
-          <span className="section-label">06 Partnerschaft</span>
-          <h2 className="section-title">Sweetie & Helen - Powered by Lüne Bräu</h2>
           <div className="sweetie-feature">
             <Reveal className="reveal-media" delay={40}>
               <img
@@ -345,26 +343,25 @@ function HomePage() {
               />
             </Reveal>
             <div className="sweetie-content">
-              <p className="sweetie-intro">Unsere Unterstützung für Dressurreiterin Helen Kretzschmar</p>
-              <p>
-                Bei Lüne Bräu sind wir stolz darauf, nicht nur gutes Bier zu brauen, sondern auch Menschen aus unserer Region
-                zu unterstützen, die mit Leidenschaft und Können ihren Weg gehen. Eine davon ist Helen Kretzschmar - eine
-                talentierte Dressurreiterin, die mit Herzblut und Präzision im Sattel sitzt.
+              <span className="section-label">06 Partnerschaft</span>
+              <h2 className="section-title">Sweetie & Helen —<br />Powered by Lüne Bräu</h2>
+              <p className="sweetie-intro">
+                Lüne Bräu unterstützt Dressurreiterin Helen Kretzschmar und ihre Stute
+                Sweet Caramel H — liebevoll "Sweetie" genannt.
               </p>
               <p>
-                An ihrer Seite: die elegante Stute Sweet Caramel H, liebevoll "Sweetie" genannt. Gemeinsam beeindrucken die
-                beiden nicht nur durch sportliche Leistung, sondern auch durch Harmonie und Ausstrahlung im Viereck.
-              </p>
-              <p>
-                Seit dieser Saison sind wir offizieller Partner von Helen und "Sweetie". Wir statten die beiden mit
-                hochwertigem Equipment aus, das unser Lüne Bräu Logo trägt. So repräsentieren sie unsere Brauerei und unsere
-                Heimatstadt Lüneburg auf Turnieren und Veranstaltungen in der Region - und hoffentlich bald auch darüber hinaus.
-              </p>
-              <p>
-                Wir freuen uns, Helen und Sweetie auf ihrem sportlichen Weg zu begleiten und sind gespannt auf viele erfolgreiche
-                Runden im Dressurviereck.
+                Als offizieller Partner statten wir die beiden mit Equipment aus, das
+                unser Logo auf Turnieren und Veranstaltungen in der Region trägt.
               </p>
               <p className="sweetie-tagline">Für uns ist klar: Leidenschaft, Präzision und Regionalität - das verbindet uns.</p>
+              <a
+                href={`https://wa.me/4917625686466`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline sweetie-cta"
+              >
+                Partnerschaft anfragen
+              </a>
             </div>
           </div>
         </div>
