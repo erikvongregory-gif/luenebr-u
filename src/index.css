@@ -3588,6 +3588,43 @@ body {
   text-align: center;
 }
 
+@media (min-width: 1001px) {
+  .product-showcase-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem 1.4rem 1.5rem;
+  }
+
+  .product-bottle-wrap {
+    width: min(280px, 100%);
+    height: clamp(320px, 24vw, 400px);
+    margin: -14px auto 0.55rem;
+  }
+
+  .product-bottle--hanseat,
+  .product-bottle--luna,
+  .product-bottle--stint {
+    --bottle-scale: 1.22;
+  }
+
+  .product-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .product-card .product-card-cta,
+  .product-card .product-card-soldout {
+    margin-top: auto;
+  }
+}
+
 /* Sold Out — besser gestylt */
 .product-card-soldout {
   display: inline-flex;
@@ -3884,8 +3921,8 @@ body {
 .bento-grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 240px 240px;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 220px 220px;
 }
 
 .bento-card {
@@ -3898,6 +3935,10 @@ body {
 
 .bento-card--large {
   grid-row: span 2;
+}
+
+.bento-card--wide {
+  grid-column: 2 / 4;
 }
 
 .bento-card img {
@@ -4217,11 +4258,15 @@ body {
 
   .bento-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, 240px);
+    grid-template-rows: repeat(4, 240px);
   }
 
   .bento-card--large {
     grid-row: span 1;
+  }
+
+  .bento-card--wide {
+    grid-column: auto;
   }
 }
 
@@ -4286,7 +4331,7 @@ body {
   }
 
   .bento-grid {
-    grid-template-rows: repeat(3, 200px);
+    grid-template-rows: repeat(4, 200px);
   }
 
   .bento-caption {

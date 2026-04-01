@@ -236,7 +236,7 @@ function HomePage() {
                 <span className="story-stat-label">Gegründet</span>
               </div>
               <div className="story-stat">
-                <span className="story-stat-value">2</span>
+                <span className="story-stat-value">3</span>
                 <span className="story-stat-label">Sorten</span>
               </div>
               <div className="story-stat">
@@ -275,6 +275,10 @@ function HomePage() {
             <Reveal className="bento-card" delay={130}>
               <img src="/altstadtflair-craft-vibe.png" alt="Ambiente in Lüneburg" loading="lazy" decoding="async" />
               <div className="bento-caption">Altstadtflair trifft Craft-Vibe</div>
+            </Reveal>
+            <Reveal className="bento-card bento-card--wide" delay={170}>
+              <img src="/luenebraeu-anstossen.png" alt="Menschen stoßen mit Lüne Bräu an" loading="lazy" decoding="async" />
+              <div className="bento-caption">Gemeinsam anstoßen</div>
             </Reveal>
           </div>
           <a href={`https://wa.me/4917625686466`} target="_blank" rel="noopener noreferrer" className="btn-primary btn-gastro">
