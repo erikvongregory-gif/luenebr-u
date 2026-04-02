@@ -29,7 +29,7 @@ export const products = [
     subtitle: 'Radler mit Zitrone',
     description: 'Frische Zitrusnoten und leichter Biercharakter - der sommerliche Radler-Style von Lüne Bräu.',
     specs: 'EBC 6 · IBU 10 · 3,9% vol.',
-    image: '/stint-schorle.webp',
+    image: '/stint-schorle.webp?v=20260402',
     imageAlt: 'Stint Schorle',
     price: 3.50,
     unit: '0,33l Flasche',

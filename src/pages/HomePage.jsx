@@ -46,7 +46,7 @@ const BEERS = [
   {
     name: 'Stint Schorle',
     subtitle: 'Radler mit Zitrone',
-    image: '/stint-schorle.webp',
+    image: '/stint-schorle.webp?v=20260402',
     imageClass: 'product-bottle--stint',
     imageAlt: 'Lüne Bräu Stint Schorle Flasche',
     bitterness: '10 IBU',
@@ -277,7 +277,7 @@ function HomePage() {
               <div className="bento-caption">Altstadtflair trifft Craft-Vibe</div>
             </Reveal>
             <Reveal className="bento-card bento-card--wide" delay={170}>
-              <img src="/luenebraeu-anstossen.png" alt="Menschen stoßen mit Lüne Bräu an" loading="lazy" decoding="async" />
+              <img src="/gemeinsam-anstossen-neu.png" alt="Menschen stoßen mit Lüne Bräu an" loading="lazy" decoding="async" />
               <div className="bento-caption">Gemeinsam anstoßen</div>
             </Reveal>
           </div>

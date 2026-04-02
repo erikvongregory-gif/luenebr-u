@@ -3558,6 +3558,8 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Weniger Tisch unten, mehr Flasche (Crop nach oben verschoben) */
+  object-position: center top;
 }
 
 .product-bottle-shine {
@@ -5302,12 +5304,6 @@ body {
 
 /* Mobile Nav Stabilitaet + Lesbarkeit */
 @media (max-width: 900px) {
-  .nav--hero-hidden {
-    transform: none;
-    opacity: 1;
-    pointer-events: auto;
-  }
-
   .nav-links.nav-links--open {
     background: linear-gradient(180deg, #0a1c35 0%, #0e2340 100%) !important;
   }
