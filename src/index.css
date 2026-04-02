@@ -2399,9 +2399,10 @@ a {
   flex-shrink: 0;
 }
 
-.store-express__btn--apple .store-express__icon {
-  width: 18px;
+.store-express__icon--apple {
+  width: 17px;
   height: 22px;
+  display: block;
 }
 
 .store-express__icon--google {
@@ -5300,6 +5301,24 @@ body {
   transform: translateY(-120%);
   opacity: 0;
   pointer-events: none;
+}
+
+/* Mobile: Nav nie ausblenden — sonst ist der Burger im Hero nicht erreichbar (pointer-events: none) */
+@media (max-width: 900px) {
+  .nav.nav--hero-hidden {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /*
+   * backdrop-filter auf .nav erzeugt einen neuen Containing Block für position:fixed.
+   * Dann bezieht sich .nav-links nur auf die Leisten-Höhe — das Menü wirkt „halb“ / abgeschnitten.
+   */
+  .nav--scrolled {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
 
 /* Mobile Nav Stabilitaet + Lesbarkeit */
