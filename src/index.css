@@ -6080,6 +6080,14 @@ body {
   color: var(--color-white) !important;
 }
 
+.age-gate .flow-btn.btn-primary {
+  color: var(--color-navy) !important;
+}
+
+.age-gate .flow-btn.age-gate-decline {
+  color: var(--color-white) !important;
+}
+
 .flow-btn:active {
   transform: scale(0.95);
 }
@@ -6139,5 +6147,80 @@ body {
 
 .flow-btn:hover .flow-btn__arrow {
   left: var(--flow-arrow-side-padding);
+}
+
+@media (max-width: 900px) {
+  .flow-btn {
+    --flow-btn-base-color: #111111;
+  }
+
+  .flow-btn.btn-primary {
+    --flow-btn-base-color: var(--color-white);
+  }
+
+  .flow-btn.btn-primary.product-card-cta,
+  .flow-btn.btn-primary.cart-checkout-btn,
+  .flow-btn.btn-primary.shop-card-btn,
+  .flow-btn.btn-primary.btn-gastro,
+  .flow-btn.btn-primary.story-cta,
+  .flow-btn.btn-primary.checkout-submit--store,
+  .age-gate .flow-btn.btn-primary {
+    --flow-btn-base-color: var(--color-navy);
+  }
+
+  .age-gate .flow-btn.age-gate-decline {
+    --flow-btn-base-color: var(--color-white);
+  }
+
+  .flow-btn {
+    border-radius: 12px;
+    transition: background 220ms ease, color 220ms ease, border-color 220ms ease, transform 220ms ease;
+    color: var(--flow-btn-base-color) !important;
+  }
+
+  .flow-btn:hover {
+    border-radius: 12px;
+    color: var(--flow-btn-base-color) !important;
+    transform: none;
+  }
+
+  .flow-btn:focus-visible,
+  .flow-btn:active {
+    color: var(--flow-btn-base-color) !important;
+  }
+
+  .flow-btn__arrow,
+  .flow-btn__circle {
+    display: none;
+  }
+
+  .flow-btn__text {
+    padding-left: 0;
+    padding-right: 0;
+    transform: none !important;
+    transition: color 220ms ease;
+  }
+
+  /* Harte Mobile-Fixups fuer Shop/Kasse/Zur-Kasse */
+  .shop .flow-btn.btn-primary.shop-card-btn,
+  .checkout .flow-btn.btn-primary.checkout-submit--store,
+  .cart-drawer .flow-btn.btn-primary.cart-checkout-btn,
+  .shop .flow-btn.btn-primary.shop-card-btn:hover,
+  .checkout .flow-btn.btn-primary.checkout-submit--store:hover,
+  .cart-drawer .flow-btn.btn-primary.cart-checkout-btn:hover,
+  .shop .flow-btn.btn-primary.shop-card-btn:active,
+  .checkout .flow-btn.btn-primary.checkout-submit--store:active,
+  .cart-drawer .flow-btn.btn-primary.cart-checkout-btn:active,
+  .shop .flow-btn.btn-primary.shop-card-btn:focus-visible,
+  .checkout .flow-btn.btn-primary.checkout-submit--store:focus-visible,
+  .cart-drawer .flow-btn.btn-primary.cart-checkout-btn:focus-visible {
+    color: var(--color-navy) !important;
+  }
+
+  .shop .flow-btn.btn-primary.shop-card-btn .flow-btn__text,
+  .checkout .flow-btn.btn-primary.checkout-submit--store .flow-btn__text,
+  .cart-drawer .flow-btn.btn-primary.cart-checkout-btn .flow-btn__text {
+    color: var(--color-navy) !important;
+  }
 }
 
