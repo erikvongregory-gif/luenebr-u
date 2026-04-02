@@ -6072,6 +6072,14 @@ body {
   color: var(--color-white) !important;
 }
 
+.flow-btn.btn-primary.checkout-submit--store {
+  color: var(--color-navy) !important;
+}
+
+.flow-btn.btn-primary.checkout-submit--store:hover {
+  color: var(--color-white) !important;
+}
+
 .flow-btn:active {
   transform: scale(0.95);
 }
