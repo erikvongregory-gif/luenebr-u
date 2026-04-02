@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { products } from '../data/products'
 import { StorePaymentBadges } from '../components/ExpressCheckout'
+import { FlowButton } from '../components/FlowButton'
 
 function ShopPage() {
   const { addItem } = useCart()
@@ -46,7 +47,11 @@ function ShopPage() {
         {products.map((product) => (
           <article key={product.id} id={product.id} className="shop-card shop-card--store">
             <a href={`#${product.id}`} className="shop-card-image">
-              <img src={product.image} alt={product.imageAlt} loading="lazy" />
+              <img
+                src={product.id === 'stint-schorle' ? '/stint-schorle-shop.png' : product.image}
+                alt={product.imageAlt}
+                loading="lazy"
+              />
             </a>
             <div className="shop-card-content">
               <span className="shop-card-label">{product.subtitle}</span>
@@ -59,15 +64,14 @@ function ShopPage() {
                 {product.price.toFixed(2).replace('.', ',')} € <span className="shop-card-unit">/ {product.unit}</span>
               </div>
               <p className="shop-card-note">Lieferung in Deutschland · inkl. MwSt.</p>
-              <button
-                type="button"
+              <FlowButton
                 className={`btn-primary shop-card-btn ${addedProductId === product.id ? 'shop-card-btn--added' : ''}`}
                 onClick={() => handleAddToCart(product)}
                 disabled={product.soldOut}
                 aria-disabled={product.soldOut ? 'true' : undefined}
               >
                 {product.soldOut ? 'Sold Out' : addedProductId === product.id ? 'Hinzugefuegt' : 'In den Warenkorb'}
-              </button>
+              </FlowButton>
             </div>
           </article>
         ))}

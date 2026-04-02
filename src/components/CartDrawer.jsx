@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import ExpressCheckout from './ExpressCheckout'
+import { FlowButton } from './FlowButton'
 import { startExpressCheckout } from '../lib/expressCheckout'
 
 function CartDrawer({ isOpen, onClose }) {
@@ -78,9 +79,9 @@ function CartDrawer({ isOpen, onClose }) {
               <span>{totalPrice.toFixed(2).replace('.', ',')} €</span>
             </div>
             <p className="cart-drawer-note">Mindestbestellwert 25 € · Steuern inkl.</p>
-            <Link to="/checkout" className="btn-primary cart-checkout-btn" onClick={onClose}>
+            <FlowButton as={Link} to="/checkout" className="btn-primary cart-checkout-btn" onClick={onClose}>
               Zur Kasse
-            </Link>
+            </FlowButton>
           </div>
         )}
       </aside>

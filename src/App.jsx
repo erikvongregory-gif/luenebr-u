@@ -1,13 +1,16 @@
-import { useState, useEffect, useRef } from 'react'
-import { Routes, Route, Link, useLocation } from 'react-router-dom'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 import logoSrc from './assets/logo.png'
 import HomePage from './pages/HomePage'
-import ShopPage from './pages/ShopPage'
-import CheckoutPage from './pages/CheckoutPage'
-import ImprintPage from './pages/ImprintPage'
-import PrivacyPage from './pages/PrivacyPage'
 import CartDrawer from './components/CartDrawer'
+import { MenuCloseIcon } from './components/MenuCloseIcon'
+import { FlowButton } from './components/FlowButton'
 import { CartProvider, useCart } from './context/CartContext'
+
+const ShopPage = lazy(() => import('./pages/ShopPage'))
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
+const ImprintPage = lazy(() => import('./pages/ImprintPage'))
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
 
 const PHONE = '+49 176 25686466'
 
@@ -18,16 +21,18 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
   const prevTotalItemsRef = useRef(totalItems)
   const [cartBump, setCartBump] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
   const isHome = location.pathname === '/'
   const shopRouteActive = location.pathname === '/shop' || location.pathname === '/checkout'
   const hideOnHero = isHome && activeHomeSection === 'hero' && !mobileNavOpen
+  const mobileHeroTransparent = isHome && activeHomeSection === 'hero'
 
   const scrollTo = (id) => {
     setMobileNavOpen(false)
     if (isHome) {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
     } else {
-      window.location.href = `/#${id}`
+      navigate({ pathname: '/', hash: `#${id}` })
     }
   }
 
@@ -45,7 +50,7 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
   }, [totalItems])
 
   return (
-    <nav className={`nav ${scrolled ? 'nav--scrolled' : ''} ${hideOnHero ? 'nav--hero-hidden' : ''}`}>
+    <nav className={`nav ${scrolled ? 'nav--scrolled' : ''} ${hideOnHero ? 'nav--hero-hidden' : ''} ${mobileHeroTransparent ? 'nav--mobile-hero' : ''}`}>
       <Link to="/" className="nav-logo" onClick={() => setMobileNavOpen(false)}>
         <img src={logoSrc} alt="Lüne Bräu" />
       </Link>
@@ -54,7 +59,7 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
         onClick={() => setMobileNavOpen(!mobileNavOpen)}
         aria-label={mobileNavOpen ? 'Menü schließen' : 'Menü öffnen'}
       >
-        {mobileNavOpen ? <span className="nav-burger-close" aria-hidden>×</span> : <><span /><span /><span /></>}
+        <MenuCloseIcon open={mobileNavOpen} className="nav-burger-icon" />
       </button>
       <div className={`nav-links ${mobileNavOpen ? 'nav-links--open' : ''}`}>
         <a
@@ -126,8 +131,11 @@ function Nav({ scrolled, mobileNavOpen, setMobileNavOpen, cartOpen, setCartOpen,
           <svg className="nav-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
           {totalItems > 0 && <span className={`nav-cart-badge ${cartBump ? 'nav-cart-badge--bump' : ''}`}>{totalItems}</span>}
         </button>
-        <Link to="/shop" className="btn-primary btn--small" onClick={() => setMobileNavOpen(false)}>
+        <FlowButton as={Link} to="/shop" className="btn-primary btn--small" onClick={() => setMobileNavOpen(false)}>
           Jetzt bestellen
+        </FlowButton>
+        <Link to="/" className="nav-mobile-bottom-logo" aria-label="Zur Startseite" onClick={() => setMobileNavOpen(false)}>
+          <img src={logoSrc} alt="Lüne Bräu Logo" />
         </Link>
       </div>
     </nav>
@@ -216,6 +224,35 @@ function App() {
   }, [location.pathname])
 
   useEffect(() => {
+    if (location.pathname !== '/' || !location.hash) return undefined
+
+    const targetId = decodeURIComponent(location.hash.replace('#', ''))
+    if (!targetId) return undefined
+
+    let attempts = 0
+    const maxAttempts = 20
+    const intervalMs = 50
+
+    const tryScroll = () => {
+      const target = document.getElementById(targetId)
+      if (!target) return false
+      target.scrollIntoView({ behavior: 'smooth' })
+      return true
+    }
+
+    if (tryScroll()) return undefined
+
+    const timer = window.setInterval(() => {
+      attempts += 1
+      if (tryScroll() || attempts >= maxAttempts) {
+        window.clearInterval(timer)
+      }
+    }, intervalMs)
+
+    return () => window.clearInterval(timer)
+  }, [location.pathname, location.hash])
+
+  useEffect(() => {
     // Stabilisiert Mobile-Menü beim Seitenwechsel (z.B. Shop <-> Home)
     setMobileNavOpen(false)
   }, [location.pathname])
@@ -266,8 +303,8 @@ function App() {
             Mit dem Betreten bestätigst du, dass du mindestens 16 Jahre alt bist.
           </p>
           <div className="age-gate-actions">
-            <button className="btn-primary" onClick={verifyAge}>Ich bin mindestens 16</button>
-            <button className="btn-outline age-gate-decline" onClick={rejectAge}>Ich bin unter 16</button>
+            <FlowButton className="btn-primary" onClick={verifyAge}>Ich bin mindestens 16</FlowButton>
+            <FlowButton className="btn-outline age-gate-decline" onClick={rejectAge}>Ich bin unter 16</FlowButton>
           </div>
         </div>
       </div>
@@ -285,13 +322,15 @@ function App() {
           setCartOpen={setCartOpen}
           activeHomeSection={activeHomeSection}
         />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/shop" element={<ShopPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/impressum" element={<ImprintPage />} />
-          <Route path="/datenschutz" element={<PrivacyPage />} />
-        </Routes>
+        <Suspense fallback={<div className="route-loading" aria-hidden />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/shop" element={<ShopPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/impressum" element={<ImprintPage />} />
+            <Route path="/datenschutz" element={<PrivacyPage />} />
+          </Routes>
+        </Suspense>
         <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         {!cookieConsent && (
           <aside className="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie-Einstellungen">
@@ -299,12 +338,12 @@ function App() {
               Wir verwenden Cookies, um die Website sicher zu betreiben und dein Erlebnis zu verbessern.
             </p>
             <div className="cookie-banner-actions">
-              <button type="button" className="btn-outline" onClick={() => handleCookieConsent('declined')}>
+              <FlowButton className="btn-outline" onClick={() => handleCookieConsent('declined')}>
                 Ablehnen
-              </button>
-              <button type="button" className="btn-primary" onClick={() => handleCookieConsent('accepted')}>
+              </FlowButton>
+              <FlowButton className="btn-primary" onClick={() => handleCookieConsent('accepted')}>
                 Alle akzeptieren
-              </button>
+              </FlowButton>
             </div>
           </aside>
         )}

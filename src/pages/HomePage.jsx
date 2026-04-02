@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal'
+import { FlowButton } from '../components/FlowButton'
 import logoSrc from '../assets/logo.png'
 
 const PHONE = '+49 176 25686466'
@@ -81,12 +82,6 @@ const ICONS = {
   ),
 }
 
-const CART_ICON = (
-  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-    <path d="M3 2h1.5L6 9h7l1.5-5H5.5M6 12.5a1 1 0 1 0 2 0 1 1 0 0 0-2 0M11 12.5a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
-  </svg>
-)
-
 function ProductMeta({ type, label, value }) {
   return (
     <span className="product-meta-item" aria-label={`${label}: ${value}`}>
@@ -113,14 +108,21 @@ function HomePage() {
           <div className="hero-content hero-content--luxury">
             <img src={logoSrc} alt="Lüne Bräu" className="hero-logo" />
             <div className="hero-cta-row">
-              <button
-                type="button"
+              <FlowButton
                 className="btn-primary btn-primary--gold"
                 onClick={() => document.getElementById('biere')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Unsere Biere
-              </button>
-              <a href="#kontakt" className="btn-outline">Kontakt aufnehmen</a>
+              </FlowButton>
+              <FlowButton
+                as="a"
+                href="https://wa.me/4917625686466"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline"
+              >
+                Kontakt aufnehmen
+              </FlowButton>
             </div>
           </div>
         </div>
@@ -177,9 +179,9 @@ function HomePage() {
                       </span>
                     </div>
                   ) : (
-                    <Link to="/shop" className="btn-primary product-card-cta">
-                      {CART_ICON} In den Warenkorb
-                    </Link>
+                    <FlowButton as={Link} to="/shop" className="btn-primary product-card-cta">
+                      In den Warenkorb
+                    </FlowButton>
                   )}
                 </div>
               </Reveal>
@@ -230,31 +232,29 @@ function HomePage() {
               bewusst klein, kompromisslos in der Qualität.
             </p>
 
-            <div className="story-stats">
-              <div className="story-stat">
-                <span className="story-stat-value">2017</span>
-                <span className="story-stat-label">Gegründet</span>
+            <div className="story-stats-cta">
+              <div className="story-stats">
+                <div className="story-stat">
+                  <span className="story-stat-value">2017</span>
+                  <span className="story-stat-label">Gegründet</span>
+                </div>
+                <div className="story-stat">
+                  <span className="story-stat-value">3</span>
+                  <span className="story-stat-label">Sorten</span>
+                </div>
+                <div className="story-stat">
+                  <span className="story-stat-value">100%</span>
+                  <span className="story-stat-label">Original</span>
+                </div>
               </div>
-              <div className="story-stat">
-                <span className="story-stat-value">3</span>
-                <span className="story-stat-label">Sorten</span>
-              </div>
-              <div className="story-stat">
-                <span className="story-stat-value">100%</span>
-                <span className="story-stat-label">Original</span>
-              </div>
-            </div>
 
-            <button
-              type="button"
-              className="btn-primary story-cta"
-              onClick={() => document.getElementById('biere')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M2 7h10M7 2l5 5-5 5" />
-              </svg>
-              Unsere Biere entdecken
-            </button>
+              <FlowButton
+                className="btn-primary story-cta"
+                onClick={() => document.getElementById('biere')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Unsere Biere entdecken
+              </FlowButton>
+            </div>
           </Reveal>
         </div>
       </Reveal>
@@ -281,9 +281,9 @@ function HomePage() {
               <div className="bento-caption">Gemeinsam anstoßen</div>
             </Reveal>
           </div>
-          <a href={`https://wa.me/4917625686466`} target="_blank" rel="noopener noreferrer" className="btn-primary btn-gastro">
+          <FlowButton as="a" href={`https://wa.me/4917625686466`} target="_blank" rel="noopener noreferrer" className="btn-primary btn-gastro">
             Fassbier anfragen
-          </a>
+          </FlowButton>
         </div>
       </Reveal>
 
@@ -296,17 +296,15 @@ function HomePage() {
               <p className="regional-lead">
                 Du willst Lüne Bräu ausschenken oder vertreiben? Wir finden gemeinsam das richtige Konzept.
               </p>
-              <a
+              <FlowButton
+                as="a"
                 href={`https://wa.me/4917625686466`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary regional-cta"
               >
                 Händler werden
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  <path d="M2 7h10M7 2l5 5-5 5" />
-                </svg>
-              </a>
+              </FlowButton>
             </Reveal>
 
             <div className="regional-network">
@@ -360,7 +358,7 @@ function HomePage() {
       <Reveal as="section" id="sweetie" className="section section--sweetie" soft>
         <div className="container">
           <div className="sweetie-feature">
-            <Reveal className="reveal-media" delay={40}>
+            <Reveal className="reveal-media sweetie-media" delay={40}>
               <img
                 src="/sweetie-helen.png"
                 alt="Dressurreiterin Helen Kretzschmar mit ihrer Stute Sweet Caramel H"
@@ -381,14 +379,15 @@ function HomePage() {
                 unser Logo auf Turnieren und Veranstaltungen in der Region trägt.
               </p>
               <p className="sweetie-tagline">Für uns ist klar: Leidenschaft, Präzision und Regionalität - das verbindet uns.</p>
-              <a
+              <FlowButton
+                as="a"
                 href={`https://wa.me/4917625686466`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-outline sweetie-cta"
               >
                 Partnerschaft anfragen
-              </a>
+              </FlowButton>
             </div>
           </div>
         </div>
@@ -398,9 +397,9 @@ function HomePage() {
         <div className="container gallery-luxury">
           <span className="section-label section-label--light">07 Community</span>
           <h2 className="section-title">Mehr Impressionen aus der Lüne Bräu Welt</h2>
-          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="btn-outline">
+          <FlowButton as="a" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="btn-outline">
             @luene_braeu auf Instagram
-          </a>
+          </FlowButton>
           <div className="instagram-preview-grid" role="list">
             {INSTAGRAM_PREVIEWS.map((image, index) => (
               <Reveal
@@ -427,14 +426,15 @@ function HomePage() {
             <div className="footer-brand">
               <img src={logoSrc} alt="Lüne Bräu" className="footer-logo" />
               <p className="footer-brand-claim">Handwerklich gebraut<br />mit Hingabe für die Region.</p>
-              <a
+              <FlowButton
+                as="a"
                 href={`https://wa.me/4917625686466`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary footer-cta"
               >
                 Jetzt bestellen
-              </a>
+              </FlowButton>
             </div>
 
             <div className="footer-nav">

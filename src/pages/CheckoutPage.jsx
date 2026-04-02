@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { FORMSPREE_FORM_ID } from '../config'
 import ExpressCheckout, { StorePaymentBadges } from '../components/ExpressCheckout'
+import { FlowButton } from '../components/FlowButton'
 import Reveal from '../components/Reveal'
 import { startExpressCheckout } from '../lib/expressCheckout'
 
@@ -173,7 +174,7 @@ function CheckoutPage() {
         <Reveal className="checkout-empty" soft>
           <h1>Dein Warenkorb ist leer</h1>
           <p>Füge zuerst Produkte im Shop hinzu.</p>
-          <Link to="/shop" className="btn-primary">Zum Shop</Link>
+          <FlowButton as={Link} to="/shop" className="btn-primary">Zum Shop</FlowButton>
         </Reveal>
       </div>
     )
@@ -187,7 +188,7 @@ function CheckoutPage() {
           <h1>Vielen Dank für deine Bestellung</h1>
           <p>Wir haben deine Anfrage erhalten und melden uns in Kürze mit der Bestätigung und den Zahlungsdetails.</p>
           <StorePaymentBadges className="checkout-success-badges" />
-          <Link to="/shop" className="btn-primary">Weiter einkaufen</Link>
+          <FlowButton as={Link} to="/shop" className="btn-primary">Weiter einkaufen</FlowButton>
         </Reveal>
       </div>
     )
@@ -286,9 +287,9 @@ function CheckoutPage() {
                 <p className="checkout-error">Es ist ein Fehler aufgetreten. Bitte versuche es erneut oder kontaktiere uns direkt.</p>
               )}
 
-              <button type="submit" className="btn-primary checkout-submit checkout-submit--store" disabled={status === 'submitting'}>
+              <FlowButton type="submit" className="btn-primary checkout-submit checkout-submit--store" disabled={status === 'submitting'}>
                 {status === 'submitting' ? 'Wird gesendet …' : 'Bestellung abschicken'}
-              </button>
+              </FlowButton>
               <p className="checkout-legal-hint">
                 Mit dem Absenden stimmst du der Verarbeitung deiner Daten zur Abwicklung der Bestellung zu.
               </p>
