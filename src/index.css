@@ -6222,5 +6222,54 @@ body {
   .cart-drawer .flow-btn.btn-primary.cart-checkout-btn .flow-btn__text {
     color: var(--color-navy) !important;
   }
+
+  /* Story-CTA ("Unsere Biere entdecken") auf Mobile immer blau halten */
+  .flow-btn.btn-primary.story-cta,
+  .flow-btn.btn-primary.story-cta:hover,
+  .flow-btn.btn-primary.story-cta:active,
+  .flow-btn.btn-primary.story-cta:focus-visible {
+    color: var(--color-navy) !important;
+  }
+
+  .flow-btn.btn-primary.story-cta .flow-btn__text {
+    color: var(--color-navy) !important;
+  }
+
+  /* Weitere helle Bereiche: Text darf NIE weiss werden */
+  .flow-btn.btn-primary.btn-gastro,
+  .flow-btn.btn-primary.btn-gastro:hover,
+  .flow-btn.btn-primary.btn-gastro:active,
+  .flow-btn.btn-primary.btn-gastro:focus-visible,
+  .flow-btn.btn-primary.product-card-cta,
+  .flow-btn.btn-primary.product-card-cta:hover,
+  .flow-btn.btn-primary.product-card-cta:active,
+  .flow-btn.btn-primary.product-card-cta:focus-visible,
+  .flow-btn.btn-primary.regional-cta,
+  .flow-btn.btn-primary.regional-cta:hover,
+  .flow-btn.btn-primary.regional-cta:active,
+  .flow-btn.btn-primary.regional-cta:focus-visible,
+  .flow-btn.btn-primary.shop-card-btn,
+  .flow-btn.btn-primary.shop-card-btn:hover,
+  .flow-btn.btn-primary.shop-card-btn:active,
+  .flow-btn.btn-primary.shop-card-btn:focus-visible,
+  .flow-btn.btn-primary.checkout-submit--store,
+  .flow-btn.btn-primary.checkout-submit--store:hover,
+  .flow-btn.btn-primary.checkout-submit--store:active,
+  .flow-btn.btn-primary.checkout-submit--store:focus-visible,
+  .flow-btn.btn-primary.cart-checkout-btn,
+  .flow-btn.btn-primary.cart-checkout-btn:hover,
+  .flow-btn.btn-primary.cart-checkout-btn:active,
+  .flow-btn.btn-primary.cart-checkout-btn:focus-visible {
+    color: var(--color-navy) !important;
+  }
+
+  .flow-btn.btn-primary.btn-gastro .flow-btn__text,
+  .flow-btn.btn-primary.product-card-cta .flow-btn__text,
+  .flow-btn.btn-primary.regional-cta .flow-btn__text,
+  .flow-btn.btn-primary.shop-card-btn .flow-btn__text,
+  .flow-btn.btn-primary.checkout-submit--store .flow-btn__text,
+  .flow-btn.btn-primary.cart-checkout-btn .flow-btn__text {
+    color: var(--color-navy) !important;
+  }
 }
 
