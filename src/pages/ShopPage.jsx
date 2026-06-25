@@ -34,7 +34,7 @@ function ShopPage() {
       <div className="shop-header">
         <span className="section-label">Shop</span>
         <h1 className="shop-title">Alle Produkte</h1>
-        <p className="shop-intro">Handwerklich gebrautes Bier – direkt von Lüne Bräu zu dir nach Hause.</p>
+        <p className="shop-intro">Handwerklich gebrautes Bier, direkt von Lüne Bräu zu dir nach Hause.</p>
         <div className="shop-trust">
           <span>In Lüneburg gebraut</span>
           <span>Frisch verpackt</span>

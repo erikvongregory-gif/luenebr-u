@@ -314,6 +314,7 @@ function App() {
   return (
     <CartProvider>
       <div className="app">
+        <div className="rx-scroll-progress" aria-hidden />
         <Nav
           scrolled={scrolled}
           mobileNavOpen={mobileNavOpen}

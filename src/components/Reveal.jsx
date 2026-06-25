@@ -10,6 +10,7 @@ const Reveal = forwardRef(function Reveal(
     rootMargin = '0px 0px -32px 0px',
     once = true,
     soft = false,
+    variant = '',
     onVisible,
     style,
     ...rest
@@ -49,6 +50,7 @@ const Reveal = forwardRef(function Reveal(
   const mergedClass = [
     'reveal',
     soft && 'reveal--soft',
+    variant && `reveal--${variant}`,
     visible && 'reveal--visible',
     className,
   ]

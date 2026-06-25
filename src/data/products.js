@@ -21,7 +21,7 @@ export const products = [
     imageAlt: 'Luna Barrels',
     price: 5.50,
     unit: '0,33l Flasche',
-    soldOut: false
+    soldOut: true
   },
   {
     id: 'stint-schorle',

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0E2340"/>
+      <stop offset="1" stop-color="#152D50"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="64" y="64" width="1072" height="502" rx="28" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)"/>
+
+  <g transform="translate(215 154)" fill="none" stroke="#F0EDE6" stroke-width="4.2" stroke-linecap="round">
+    <path d="M615 140 Q540 128 440 130 Q320 136 200 146 Q95 155 40 146 L0 140" />
+    <path d="M615 188 Q540 200 440 198 Q320 192 200 182 Q95 173 40 182 L0 188" />
+    <path d="M620 146 L664 160 L688 152 L678 138 L656 130 L620 140 Z" />
+    <circle cx="592" cy="161" r="9" fill="#F0EDE6" stroke="none" />
+    <path d="M560 128 L572 106 L584 128" />
+    <path d="M450 124 L462 102 L474 124" />
+    <path d="M338 128 L350 106 L362 128" />
+    <path d="M225 136 L237 114 L249 136" />
+    <path d="M450 204 L462 226 L474 204" />
+    <path d="M338 208 L350 230 L362 208" />
+    <path d="M0 140 L-42 114 L-52 160 L-42 206 L0 188" />
+  </g>
+
+  <text x="600" y="425" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="74" font-weight="700" fill="#F0EDE6" letter-spacing="3">L�NE BR�U</text>
+  <text x="600" y="475" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="500" fill="#D6C28B" letter-spacing="4">HANDCRAFTED SINCE 2017</text>
+</svg>
+
