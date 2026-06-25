@@ -402,6 +402,13 @@ function HomePage() {
             <div className="rx-footer__legal">
               <Link to="/impressum">Impressum</Link>
               <Link to="/datenschutz">Datenschutz</Link>
+              <button
+                type="button"
+                className="rx-footer__cookie"
+                onClick={() => window.dispatchEvent(new Event('luenebraeu:cookie-settings'))}
+              >
+                Cookie-Einstellungen
+              </button>
             </div>
           </div>
         </div>

@@ -32,37 +32,199 @@ body::after { opacity: 0.18 !important; mix-blend-mode: soft-light !important; }
 
 /* ====================== SHARED CHROME (dark) ====================== */
 
-/* Loader */
+/* Loader — kinematisch, ruhig, markentreu */
 .loader {
-  background: radial-gradient(120% 120% at 50% 0%, #1a150d 0%, var(--rx-bg) 60%) !important;
+  background:
+    radial-gradient(90% 70% at 50% 0%, color-mix(in srgb, var(--rx-accent) 18%, transparent), transparent 58%),
+    radial-gradient(80% 60% at 50% 100%, color-mix(in srgb, #3a2412 55%, transparent), transparent 60%),
+    linear-gradient(180deg, #130d06 0%, var(--rx-bg) 70%) !important;
 }
-.loader-progress { background: rgba(255, 255, 255, 0.12) !important; }
+.loader-inner { gap: 1.6rem !important; }
+.loader-logo {
+  filter: brightness(0) invert(1) !important;
+  animation: rxLoaderPulse 2.6s ease-in-out infinite;
+}
+.loader-progress {
+  width: min(200px, 56vw) !important;
+  height: 2px !important;
+  background: var(--rx-line-strong) !important;
+}
 .loader-progress-bar {
-  background: linear-gradient(90deg, transparent, var(--rx-accent), transparent) !important;
+  background: linear-gradient(90deg, transparent, var(--rx-accent), var(--rx-accent2), transparent) !important;
+}
+.loader-caption {
+  font-family: var(--rx-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--rx-accent2);
+  opacity: 0;
+  animation: rxLoaderCaption 1s var(--rx-ease) 0.4s forwards;
+}
+@keyframes rxLoaderPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.84; transform: scale(0.985); }
+}
+@keyframes rxLoaderCaption {
+  to { opacity: 0.85; }
 }
 
-/* Age Gate */
+/* Age Gate — zentrierte Premium-Karte auf kinematischem Grund */
 .age-gate {
-  background: radial-gradient(130% 120% at 50% -10%, #1c160d 0%, var(--rx-bg) 62%) !important;
+  background:
+    radial-gradient(85% 60% at 50% -8%, color-mix(in srgb, var(--rx-accent) 18%, transparent), transparent 56%),
+    radial-gradient(70% 55% at 50% 108%, color-mix(in srgb, #3a2412 55%, transparent), transparent 60%),
+    linear-gradient(180deg, #130d06 0%, var(--rx-bg) 72%) !important;
 }
-.age-gate h2 { font-family: var(--rx-display); font-weight: 700; letter-spacing: -0.02em; }
-.age-gate .btn-primary,
-.age-gate .btn-primary:hover {
+.age-gate-content {
+  position: relative;
+  max-width: 430px !important;
+  padding: clamp(2rem, 5vw, 2.8rem) clamp(1.5rem, 4vw, 2.4rem) clamp(1.8rem, 4vw, 2.4rem);
+  border: 1px solid var(--rx-line);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--rx-surface) 75%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
+  box-shadow:
+    0 40px 90px -34px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+.age-gate-content::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--rx-accent), transparent);
+  opacity: 0.7;
+}
+.age-gate-logo {
+  width: 150px !important;
+  margin-bottom: 1.4rem !important;
+  filter: brightness(0) invert(1) !important;
+}
+.age-gate-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  font-family: var(--rx-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--rx-accent2);
+}
+.age-gate h2 {
+  font-family: var(--rx-display) !important;
+  font-size: clamp(2rem, 6vw, 2.6rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.02;
+  letter-spacing: -0.03em !important;
+  color: var(--rx-paper) !important;
+  margin-bottom: 1rem !important;
+}
+.age-gate p { color: var(--rx-muted) !important; }
+.age-gate-lead {
+  color: color-mix(in srgb, var(--rx-paper) 80%, transparent) !important;
+  font-size: 1.02rem !important;
+}
+.age-gate-note { color: var(--rx-faint) !important; }
+
+/* Buttons im Age Gate */
+.age-gate .flow-btn.btn-primary,
+.age-gate .flow-btn.btn-primary:hover {
   background: var(--rx-accent) !important;
   border-color: var(--rx-accent) !important;
   color: #fff !important;
+  border-radius: 12px !important;
+  --flow-btn-base-color: #fff !important;
 }
-.age-gate .btn-primary .flow-btn__text { color: #fff !important; }
+.age-gate .flow-btn.btn-primary .flow-btn__text { color: #fff !important; }
+.age-gate .flow-btn.btn-primary:hover {
+  background: var(--rx-accent2) !important;
+  border-color: var(--rx-accent2) !important;
+}
+.age-gate .flow-btn.age-gate-decline,
+.age-gate .flow-btn.age-gate-decline:hover {
+  background: transparent !important;
+  border: 1px solid var(--rx-line-strong) !important;
+  color: var(--rx-muted) !important;
+  border-radius: 12px !important;
+  --flow-btn-base-color: var(--rx-muted) !important;
+}
+.age-gate .flow-btn.age-gate-decline .flow-btn__text { color: var(--rx-muted) !important; }
+.age-gate .flow-btn.age-gate-decline:hover {
+  border-color: var(--rx-accent) !important;
+  color: var(--rx-accent2) !important;
+}
+.age-gate .flow-btn.age-gate-decline:hover .flow-btn__text { color: var(--rx-accent2) !important; }
 
 /* Cookie banner */
 .cookie-banner {
-  background: color-mix(in srgb, var(--rx-surface) 92%, transparent) !important;
-  border: 1px solid var(--rx-line) !important;
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  left: 50% !important;
+  right: auto !important;
+  bottom: clamp(1rem, 3vw, 1.75rem) !important;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 2rem));
+  gap: 1.4rem !important;
+  padding: 1.1rem 1.3rem !important;
+  border-radius: 18px !important;
+  background: color-mix(in srgb, var(--rx-surface2) 90%, transparent) !important;
+  border: 1px solid var(--rx-line-strong) !important;
+  box-shadow: 0 28px 64px -28px rgba(0, 0, 0, 0.9),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
   color: var(--rx-paper) !important;
 }
-.cookie-banner-text { color: var(--rx-muted) !important; }
+.cookie-banner-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  min-width: 0;
+}
+.cookie-banner-emoji {
+  font-size: 1.7rem;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+}
+.cookie-banner-copy { min-width: 0; }
+.cookie-banner-title {
+  margin: 0 0 0.25rem;
+  font-family: var(--rx-display);
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--rx-paper) !important;
+}
+.cookie-banner-text {
+  color: var(--rx-muted) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Footer: Cookie-Einstellungen als dezenter Link */
+.rx-footer__cookie {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  color: var(--rx-muted);
+  transition: color 0.3s ease;
+}
+.rx-footer__cookie:hover { color: var(--rx-accent2); }
+
+@media (max-width: 700px) {
+  .cookie-banner {
+    left: 1rem !important;
+    right: 1rem !important;
+    transform: none;
+    width: auto;
+  }
+}
 
 /* ====================== NAVIGATION (floating glass pill, dark) ====================== */
 @media (min-width: 901px) {

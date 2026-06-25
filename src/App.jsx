@@ -279,6 +279,15 @@ function App() {
     setCookieConsent(value)
   }
 
+  useEffect(() => {
+    const reopenCookieSettings = () => {
+      localStorage.removeItem('luenebraeu-cookie-consent')
+      setCookieConsent(null)
+    }
+    window.addEventListener('luenebraeu:cookie-settings', reopenCookieSettings)
+    return () => window.removeEventListener('luenebraeu:cookie-settings', reopenCookieSettings)
+  }, [])
+
   if (loading) {
     return (
       <div className={`loader ${loaderExiting ? 'loader--exit' : ''}`}>
@@ -287,6 +296,7 @@ function App() {
           <div className="loader-progress" aria-hidden="true">
             <span className="loader-progress-bar" />
           </div>
+          <span className="loader-caption">Handgebraut in Lüneburg</span>
         </div>
       </div>
     )
@@ -297,6 +307,7 @@ function App() {
       <div className="age-gate">
         <div className="age-gate-content">
           <img src={logoSrc} alt="Lüne Bräu" className="age-gate-logo" />
+          <span className="age-gate-eyebrow">Altersnachweis</span>
           <h2>Altersprüfung</h2>
           <p className="age-gate-lead">Der Verkauf von Bier erfolgt nur an Personen ab 16 Jahren.</p>
           <p className="age-gate-note">
@@ -335,9 +346,15 @@ function App() {
         <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         {!cookieConsent && (
           <aside className="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie-Einstellungen">
-            <p className="cookie-banner-text">
-              Wir verwenden Cookies, um die Website sicher zu betreiben und dein Erlebnis zu verbessern.
-            </p>
+            <div className="cookie-banner-body">
+              <span className="cookie-banner-emoji" aria-hidden="true">🍪</span>
+              <div className="cookie-banner-copy">
+                <p className="cookie-banner-title">Cookies? Aber sicher – nur leider keine zum Reinbeißen.</p>
+                <p className="cookie-banner-text">
+                  Diese Krümel halten die Seite am Laufen und passen auf, dass dein Warenkorb nicht heimlich leergetrunken wird. Prost!
+                </p>
+              </div>
+            </div>
             <div className="cookie-banner-actions">
               <FlowButton className="btn-outline" onClick={() => handleCookieConsent('declined')}>
                 Ablehnen
